@@ -41,60 +41,50 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link href="/coach" className="hidden sm:flex">
-            <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground hover:text-primary hover:bg-secondary/20">
-              <Sparkles className="w-4 h-4 mr-1" />
-              AI Coach
+          <div className="flex items-center gap-3">
+            <Link href="/coach" className="hidden sm:flex">
+              <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground hover:text-primary hover:bg-secondary/20">
+                <Sparkles className="w-4 h-4 mr-1" />
+                AI Coach
+              </Button>
+            </Link>
+            <Link href="/discovery">
+              <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary/20">
+                <User className="w-5 h-5 text-foreground" />
+              </Button>
+            </Link>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden rounded-full"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
-          </Link>
-          <Link href="/onboarding">
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary/20">
-              <User className="w-5 h-5 text-foreground" />
-            </Button>
-          </Link>
-          <Link href="/auth" className="hidden sm:block">
-            <Button variant="default" className="rounded-full px-6 font-bold shadow-md shadow-primary/20">
-              Get Started
-            </Button>
-          </Link>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden rounded-full"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
-        </div>
+          </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-md">
           <div className="container mx-auto px-4 py-4 space-y-2">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block py-3 px-4 rounded-xl text-sm font-bold transition-colors ${
-                  pathname === link.href || pathname.startsWith(link.href + '/') 
-                    ? 'bg-primary/10 text-primary' 
-                    : 'text-foreground hover:bg-secondary/20'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link href="/auth" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="w-full mt-4 rounded-full font-bold">
-                Get Started
-              </Button>
-            </Link>
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block py-3 px-4 rounded-xl text-sm font-bold transition-colors ${
+                    pathname === link.href || pathname.startsWith(link.href + '/') 
+                      ? 'bg-primary/10 text-primary' 
+                      : 'text-foreground hover:bg-secondary/20'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </nav>
-  );
-}
+        )}
+      </nav>
+    );
+  }

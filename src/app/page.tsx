@@ -23,18 +23,18 @@ export default function Home() {
             <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto mb-10">
               Nomance is built for high-trust, high-intent dating. No infinite loops. No ghosting culture. Just meaningful matches designed for real-world outcomes.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/auth">
-                <Button size="lg" variant="secondary" className="px-8 py-6 text-lg rounded-full font-bold">
-                  Begin Your Journey
-                </Button>
-              </Link>
-              <Link href="/events">
-                <Button size="lg" variant="outline" className="px-8 py-6 text-lg rounded-full border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground">
-                  Explore Events
-                </Button>
-              </Link>
-            </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/discovery">
+                  <Button size="lg" variant="secondary" className="px-8 py-6 text-lg rounded-full font-bold">
+                    Begin Your Journey
+                  </Button>
+                </Link>
+                <Link href="/events">
+                  <Button size="lg" variant="outline" className="px-8 py-6 text-lg rounded-full border-primary-foreground/20 hover:bg-primary-foreground/10 text-primary-foreground">
+                    Explore Events
+                  </Button>
+                </Link>
+              </div>
           </div>
           
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-secondary/10 blur-[120px] rounded-full pointer-events-none" />
@@ -158,9 +158,9 @@ export default function Home() {
                 Join thousands of singles who&apos;ve moved beyond shallow swiping to find meaningful connections.
               </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/auth">
+              <Link href="/discovery">
                 <Button size="lg" variant="secondary" className="px-8 py-6 text-lg rounded-full font-bold">
-                  Create Free Account
+                  Start Discovering
                 </Button>
               </Link>
               <Link href="/events">
