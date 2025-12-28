@@ -8,16 +8,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Heart, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function MatchesPage() {
   const [matches, setMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMatches = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        router.push("/auth");
+        return;
+      }
       setUser(user);
 
       // Fetch mutual matches (accepted)
@@ -49,7 +54,7 @@ export default function MatchesPage() {
     };
 
     fetchMatches();
-  }, []);
+  }, [router]);
 
   if (loading) {
     return (

@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Sparkles, ShieldCheck, AlertCircle, Loader2, MapPin, Coffee, Film, Utensils, Music, X, Calendar, Star } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const DATE_SPOTS = [
   { id: 1, name: "Blue Bottle Coffee", type: "coffee", address: "315 Linden St", rating: 4.8, vibe: "Cozy & Creative", icon: Coffee },
@@ -33,11 +34,15 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
   const [matchInfo, setMatchInfo] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [showDatePlanner, setShowDatePlanner] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        router.push("/auth");
+        return;
+      }
       setUser(user);
 
       const { data: matchData, error: matchError } = await supabase
@@ -81,7 +86,7 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [matchId]);
+  }, [matchId, router]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();

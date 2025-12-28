@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Camera, FileText, MessageSquare, Check, RefreshCw, Loader2, ChevronRight, Lightbulb } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const PHOTO_TIPS = [
   { id: 1, tip: "Add a photo showing you doing your favorite hobby", category: "activity" },
@@ -39,11 +40,15 @@ export default function CoachPage() {
   const [currentBio, setCurrentBio] = useState("");
   const [improvedBio, setImprovedBio] = useState("");
   const [activeTab, setActiveTab] = useState<"photos" | "bio" | "tone">("photos");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        router.push("/auth");
+        return;
+      }
       setUser(user);
 
       const { data: profileData } = await supabase
@@ -60,7 +65,7 @@ export default function CoachPage() {
     };
 
     fetchProfile();
-  }, []);
+  }, [router]);
 
   const analyzeBio = async () => {
     if (!currentBio.trim()) {

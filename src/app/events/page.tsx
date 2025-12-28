@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Calendar, MapPin, Users, Zap, Video, Coffee, Palette, BookOpen, Heart, Clock, ChevronRight, Plus, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SAMPLE_EVENTS = [
   {
@@ -85,15 +86,20 @@ export default function EventsPage() {
   const [joinedEvents, setJoinedEvents] = useState<string[]>([]);
   const [joinedRooms, setJoinedRooms] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/auth");
+        return;
+      }
       setUser(user);
       setLoading(false);
     };
     fetchUser();
-  }, []);
+  }, [router]);
 
   const handleJoinEvent = (eventId: string) => {
     if (joinedEvents.includes(eventId)) {

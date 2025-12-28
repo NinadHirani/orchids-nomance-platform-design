@@ -10,6 +10,7 @@ import { Heart, X, Info, ShieldCheck, MapPin, Calendar, Loader2, MessageCircle, 
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const MOODS = [
   { id: "talking", label: "Talking", icon: MessageCircle, description: "Deep conversations from home", color: "bg-blue-500/10 text-blue-600 border-blue-200" },
@@ -26,11 +27,15 @@ export default function DiscoveryPage() {
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [moodMatching, setMoodMatching] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        router.push("/auth");
+        return;
+      }
       setUser(user);
 
       const today = new Date().toISOString().split('T')[0];
@@ -73,7 +78,7 @@ export default function DiscoveryPage() {
     };
 
     fetchData();
-  }, []);
+  }, [router]);
 
   const handleMoodChange = async (mood: string) => {
     if (!user) return;
