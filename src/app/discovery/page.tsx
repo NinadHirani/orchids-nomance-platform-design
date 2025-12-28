@@ -29,56 +29,63 @@ export default function DiscoveryPage() {
   const [moodMatching, setMoodMatching] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-      setUser(user);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            router.push("/auth");
+            return;
+          }
+          setUser(user);
 
-      const today = new Date().toISOString().split('T')[0];
-      const { count } = await supabase
-        .from("discovery_history")
-        .select("*", { count: 'exact', head: true })
-        .eq("user_id", user.id)
-        .eq("discovered_at", today);
+          const today = new Date().toISOString().split('T')[0];
+          const { count } = await supabase
+            .from("discovery_history")
+            .select("*", { count: 'exact', head: true })
+            .eq("user_id", user.id)
+            .eq("discovered_at", today);
 
-      if (count && count >= 5) {
-        setDailyLimitReached(true);
-        setLoading(false);
-        return;
-      }
+          if (count && count >= 5) {
+            setDailyLimitReached(true);
+            setLoading(false);
+            return;
+          }
 
-      const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      setUserProfile(profile);
-      setSelectedMood(profile?.mood || "talking");
-      
-      const { data: discoveredIds } = await supabase
-        .from("discovery_history")
-        .select("discovered_user_id")
-        .eq("user_id", user.id);
+          const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+          setUserProfile(profile);
+          setSelectedMood(profile?.mood || "talking");
+          
+          const { data: discoveredIds } = await supabase
+            .from("discovery_history")
+            .select("discovered_user_id")
+            .eq("user_id", user.id);
 
-      const excludedIds = [user.id, ...(discoveredIds?.map(d => d.discovered_user_id) || [])];
+          const excludedIds = [user.id, ...(discoveredIds?.map(d => d.discovered_user_id) || [])];
 
-      const { data: potentialMatches, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .not("id", "in", `(${excludedIds.join(',')})`)
-        .eq("intent", profile?.intent)
-        .limit(5);
+          const { data: potentialMatches, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .not("id", "in", `(${excludedIds.join(',')})`)
+            .eq("intent", profile?.intent)
+            .limit(5);
 
-      if (error) {
-        console.error(error);
-      } else {
-        setProfiles(potentialMatches || []);
-      }
-      setLoading(false);
-    };
+          if (error) {
+            console.error(error);
+            toast.error("Failed to load potential matches");
+          } else {
+            setProfiles(potentialMatches || []);
+          }
+        } catch (error: any) {
+          console.error("Discovery fetch error:", error);
+          toast.error("An error occurred while loading discovery");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchData();
-  }, [router]);
+      fetchData();
+    }, [router]);
 
   const handleMoodChange = async (mood: string) => {
     if (!user) return;

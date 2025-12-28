@@ -88,18 +88,24 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-      setUser(user);
-      setLoading(false);
-    };
-    fetchUser();
-  }, [router]);
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            router.push("/auth");
+            return;
+          }
+          setUser(user);
+        } catch (error) {
+          console.error("Events auth check error:", error);
+          router.push("/auth");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchUser();
+    }, [router]);
 
   const handleJoinEvent = (eventId: string) => {
     if (joinedEvents.includes(eventId)) {

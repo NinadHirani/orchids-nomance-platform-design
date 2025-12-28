@@ -42,30 +42,39 @@ export default function CoachPage() {
   const [activeTab, setActiveTab] = useState<"photos" | "bio" | "tone">("photos");
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-      setUser(user);
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            router.push("/auth");
+            return;
+          }
+          setUser(user);
 
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
+          const { data: profileData, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
 
-      if (profileData) {
-        setProfile(profileData);
-        setCurrentBio(profileData.bio || "");
-      }
-      setLoading(false);
-    };
+          if (error) {
+            console.error(error);
+            toast.error("Failed to load profile data");
+          } else if (profileData) {
+            setProfile(profileData);
+            setCurrentBio(profileData.bio || "");
+          }
+        } catch (error: any) {
+          console.error("Coach fetch error:", error);
+          toast.error("An error occurred while loading coach");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchProfile();
-  }, [router]);
+      fetchProfile();
+    }, [router]);
 
   const analyzeBio = async () => {
     if (!currentBio.trim()) {

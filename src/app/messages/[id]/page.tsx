@@ -36,57 +36,63 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
   const [showDatePlanner, setShowDatePlanner] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-      setUser(user);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            router.push("/auth");
+            return;
+          }
+          setUser(user);
 
-      const { data: matchData, error: matchError } = await supabase
-        .from("matches")
-        .select(`
-          id,
-          user_1,
-          user_2,
-          profiles_user_1:user_1 (*),
-          profiles_user_2:user_2 (*)
-        `)
-        .eq("id", matchId)
-        .single();
+          const { data: matchData, error: matchError } = await supabase
+            .from("matches")
+            .select(`
+              id,
+              user_1,
+              user_2,
+              profiles_user_1:user_1 (*),
+              profiles_user_2:user_2 (*)
+            `)
+            .eq("id", matchId)
+            .single();
 
-      if (matchError) {
-        toast.error("Could not load match info");
-      } else {
-        const otherProfile = matchData.user_1 === user.id ? matchData.profiles_user_2 : matchData.profiles_user_1;
-        setMatchInfo({ ...matchData, otherProfile });
-      }
+          if (matchError) {
+            toast.error("Could not load match info");
+          } else {
+            const otherProfile = matchData.user_1 === user.id ? matchData.profiles_user_2 : matchData.profiles_user_1;
+            setMatchInfo({ ...matchData, otherProfile });
+          }
 
-      const { data: msgData } = await supabase
-        .from("messages")
-        .select("*")
-        .eq("match_id", matchId)
-        .order("created_at", { ascending: true });
+          const { data: msgData } = await supabase
+            .from("messages")
+            .select("*")
+            .eq("match_id", matchId)
+            .order("created_at", { ascending: true });
 
-      setMessages(msgData || []);
-      setLoading(false);
-    };
+          setMessages(msgData || []);
+        } catch (error: any) {
+          console.error("Messages fetch error:", error);
+          toast.error("An error occurred while loading messages");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchData();
+      fetchData();
 
-    const channel = supabase
-      .channel(`match:${matchId}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `match_id=eq.${matchId}` }, payload => {
-        setMessages(prev => [...prev, payload.new]);
-      })
-      .subscribe();
+      const channel = supabase
+        .channel(`match:${matchId}`)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `match_id=eq.${matchId}` }, payload => {
+          setMessages(prev => [...prev, payload.new]);
+        })
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [matchId, router]);
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }, [matchId, router]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();

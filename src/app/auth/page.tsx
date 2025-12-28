@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Heart, Loader2 } from "lucide-react";
+import { Heart, Loader2, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -15,28 +15,88 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          router.push("/discovery");
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      } finally {
+        setCheckingSession(false);
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    
     setLoading(true);
+    console.log(`Attempting ${isSignUp ? 'Sign Up' : 'Sign In'} for:`, email);
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+          }
+        });
+        
         if (error) throw error;
-        toast.success("Check your email for the confirmation link!");
+        
+        if (data.user && data.session) {
+          toast.success("Account created and logged in!");
+          router.push("/onboarding");
+        } else {
+          toast.success("Check your email for the confirmation link!");
+        }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        router.push("/onboarding");
+        
+        if (data.session) {
+          toast.success("Successfully signed in!");
+          // Check if they have a profile
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("id", data.user.id)
+            .single();
+          
+          if (profile) {
+            router.push("/discovery");
+          } else {
+            router.push("/onboarding");
+          }
+        }
       }
     } catch (error: any) {
-      toast.error(error.message);
+      console.error("Auth error:", error);
+      toast.error(error.message || "An error occurred during authentication");
     } finally {
       setLoading(false);
     }
   };
+
+  if (checkingSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -68,6 +128,7 @@ export default function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required 
                 className="bg-background border-border"
+                autoComplete="email"
               />
             </div>
             <div className="space-y-2">
@@ -79,11 +140,18 @@ export default function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required 
                 className="bg-background border-border"
+                autoComplete={isSignUp ? "new-password" : "current-password"}
               />
+              {isSignUp && (
+                <p className="text-[10px] text-muted-foreground mt-1 flex items-start gap-1">
+                  <AlertCircle className="w-3 h-3 mt-0.5 shrink-0" />
+                  Password must be at least 6 characters.
+                </p>
+              )}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button className="w-full h-12 text-lg font-bold" disabled={loading}>
+            <Button className="w-full h-12 text-lg font-bold" disabled={loading} type="submit">
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSignUp ? "Create Account" : "Sign In"}
             </Button>

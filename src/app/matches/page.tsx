@@ -16,45 +16,52 @@ export default function MatchesPage() {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
-      }
-      setUser(user);
+    useEffect(() => {
+      const fetchMatches = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            router.push("/auth");
+            return;
+          }
+          setUser(user);
 
-      // Fetch mutual matches (accepted)
-      const { data, error } = await supabase
-        .from("matches")
-        .select(`
-          id,
-          user_1,
-          user_2,
-          profiles_user_1:user_1 (id, full_name, avatar_url, intent),
-          profiles_user_2:user_2 (id, full_name, avatar_url, intent)
-        `)
-        .or(`user_1.eq.${user.id},user_2.eq.${user.id}`)
-        .eq("status", "accepted");
+          // Fetch mutual matches (accepted)
+          const { data, error } = await supabase
+            .from("matches")
+            .select(`
+              id,
+              user_1,
+              user_2,
+              profiles_user_1:user_1 (id, full_name, avatar_url, intent),
+              profiles_user_2:user_2 (id, full_name, avatar_url, intent)
+            `)
+            .or(`user_1.eq.${user.id},user_2.eq.${user.id}`)
+            .eq("status", "accepted");
 
-      if (error) {
-        console.error(error);
-      } else {
-        const formattedMatches = data.map(m => {
-          const otherProfile = m.user_1 === user.id ? m.profiles_user_2 : m.profiles_user_1;
-          return {
-            id: m.id,
-            profile: otherProfile
-          };
-        });
-        setMatches(formattedMatches);
-      }
-      setLoading(false);
-    };
+          if (error) {
+            console.error(error);
+            toast.error("Failed to load matches");
+          } else {
+            const formattedMatches = data.map(m => {
+              const otherProfile = m.user_1 === user.id ? m.profiles_user_2 : m.profiles_user_1;
+              return {
+                id: m.id,
+                profile: otherProfile
+              };
+            });
+            setMatches(formattedMatches);
+          }
+        } catch (error: any) {
+          console.error("Matches fetch error:", error);
+          toast.error("An error occurred while loading matches");
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchMatches();
-  }, [router]);
+      fetchMatches();
+    }, [router]);
 
   if (loading) {
     return (

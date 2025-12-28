@@ -45,17 +45,24 @@ export default function OnboardingPage() {
     selectedValues: [] as string[],
   });
 
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-      } else {
-        setUser(user);
-      }
-    };
-    getUser();
-  }, [router]);
+    useEffect(() => {
+      const getUser = async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            router.push("/auth");
+          } else {
+            setUser(user);
+          }
+        } catch (error) {
+          console.error("Onboarding auth check error:", error);
+          router.push("/auth");
+        } finally {
+          setLoading(false);
+        }
+      };
+      getUser();
+    }, [router]);
 
   const handleNext = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const handleBack = () => setStep((s) => Math.max(s - 1, 0));
