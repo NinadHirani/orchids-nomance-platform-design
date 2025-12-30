@@ -32,16 +32,16 @@ import { Button } from "@/components/ui/button";
                         : 'text-muted-foreground'
                     }`}
                   >
-                    {link.label === "Search" ? (
-                      <div className="p-1.5 rounded-lg bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#cc2366] shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
-                        <link.icon className="w-4 h-4 text-white" />
-                      </div>
-                    ) : (
-                      <>
-                        <link.icon className="w-4 h-4" />
-                        <span className="hidden lg:inline">{link.label}</span>
-                      </>
-                    )}
+                      {link.label === "Search" ? (
+                        <div className="p-2 rounded-xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#cc2366] shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+                          <link.icon className="w-6 h-6 text-white" />
+                        </div>
+                      ) : (
+                        <>
+                          <link.icon className="w-6 h-6" />
+                          <span className="hidden lg:inline">{link.label}</span>
+                        </>
+                      )}
                     {link.label !== "Search" && (
                       <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full ${
                         pathname === link.href || pathname.startsWith(link.href + '/') ? 'w-full' : ''
@@ -65,13 +65,13 @@ import { Button } from "@/components/ui/button";
                           : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {link.label === "Search" ? (
-                      <div className="p-3 rounded-2xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#cc2366] shadow-xl shadow-pink-500/30 -translate-y-4 active:scale-95 transition-all">
-                        <link.icon className="w-7 h-7 text-white" />
-                      </div>
-                    ) : (
-                      <link.icon className="w-6 h-6" />
-                    )}
+                      {link.label === "Search" ? (
+                        <div className="p-4 rounded-[2rem] bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#cc2366] shadow-2xl shadow-pink-500/30 -translate-y-5 active:scale-95 transition-all">
+                          <link.icon className="w-9 h-9 text-white" />
+                        </div>
+                      ) : (
+                        <link.icon className="w-8 h-8" />
+                      )}
                   </Link>
                 ))}
               </div>
