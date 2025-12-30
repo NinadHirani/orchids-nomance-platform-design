@@ -9,9 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Camera, MapPin, ShieldCheck, Heart, Sparkles, User, Info } from "lucide-react";
+import { Loader2, Camera, MapPin, ShieldCheck, Heart, Sparkles, User, Info, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { PhotoUpload } from "@/components/profile-photos";
 
 const INTENTS = [
   { value: "life_partnership", label: "Life Partnership" },
@@ -35,7 +36,8 @@ export default function ProfilePage() {
     gender: "other",
     birth_date: "",
     values: [],
-    avatar_url: ""
+    avatar_url: "",
+    photos: []
   });
 
   useEffect(() => {
@@ -67,7 +69,8 @@ export default function ProfilePage() {
           gender: data.gender || "other",
           birth_date: data.birth_date || "",
           values: data.values || [],
-          avatar_url: data.avatar_url || ""
+          avatar_url: data.avatar_url || "",
+          photos: data.photos || []
         });
       }
     } catch (error: any) {
@@ -84,11 +87,18 @@ export default function ProfilePage() {
 
     try {
       setSaving(true);
+      
+      // Update avatar_url to the first photo if available
+      const avatar_url = profile.photos && profile.photos.length > 0 
+        ? profile.photos[0] 
+        : profile.avatar_url;
+
       const { error } = await supabase
         .from("profiles")
         .upsert({
           id: user.id,
           ...profile,
+          avatar_url,
           last_active: new Date().toISOString()
         });
 
@@ -126,29 +136,25 @@ export default function ProfilePage() {
       <Navbar />
       
       <main className="container mx-auto px-4 pt-24 max-w-3xl">
-        <header className="mb-8 flex flex-col items-center">
-          <div className="relative group mb-6">
-            <div className="w-32 h-32 rounded-3xl bg-secondary/30 overflow-hidden border-4 border-background shadow-xl">
-              {profile.avatar_url ? (
-                <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-primary/5">
-                  <User className="w-12 h-12" />
-                </div>
-              )}
-            </div>
-            <button className="absolute bottom-2 right-2 bg-primary text-primary-foreground p-2 rounded-xl shadow-lg hover:scale-105 transition-transform">
-              <Camera className="w-4 h-4" />
-            </button>
-          </div>
+        <header className="mb-12">
+          <h1 className="text-3xl font-bold text-foreground mb-6">Edit Your Profile</h1>
           
-          <h1 className="text-3xl font-bold text-foreground mb-1">{profile.full_name || "New Member"}</h1>
-          <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            <ShieldCheck className="w-4 h-4 text-primary" />
-            <span>Profile {profile.full_name ? "85% Complete" : "Incomplete"}</span>
-            {isGuest && (
-              <Badge variant="secondary" className="ml-2 bg-orange-500/10 text-orange-600 border-none">Guest Access</Badge>
-            )}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              <ImageIcon className="w-4 h-4" />
+              Profile Photos
+            </div>
+            
+            <PhotoUpload 
+              userId={user.id} 
+              initialPhotos={profile.photos} 
+              onPhotosChange={(photos) => setProfile({ ...profile, photos })} 
+            />
+            
+            <div className="flex items-center gap-2 text-muted-foreground text-xs bg-secondary/20 p-3 rounded-xl">
+              <Info className="w-4 h-4 text-primary" />
+              <span>Drag to reorder. The first photo is your main profile image.</span>
+            </div>
           </div>
         </header>
 
