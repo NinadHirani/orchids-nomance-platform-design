@@ -306,21 +306,33 @@ export default function DiscoveryPage() {
                     )}
                   </CardContent>
 
-                  <CardFooter className="grid grid-cols-2 gap-4 p-6 pt-0">
-                    <Button 
-                      variant="outline" 
-                      className="h-16 rounded-2xl border-2 border-border text-muted-foreground hover:bg-secondary/10 hover:text-foreground"
-                      onClick={() => handleAction('skip')}
-                    >
-                      <X className="w-8 h-8" />
-                    </Button>
-                    <Button 
-                      className="h-16 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20"
-                      onClick={() => handleAction('like')}
-                    >
-                      <Heart className="w-8 h-8 fill-current" />
-                    </Button>
-                  </CardFooter>
+                    <CardFooter className="flex flex-col gap-6 p-6 pt-0">
+                      <div className="flex items-center justify-center w-full">
+                        <div className="flex items-center gap-6 p-2 bg-white/5 rounded-[2.5rem] border border-white/10 backdrop-blur-3xl shadow-2xl">
+                          <motion.button
+                            whileHover={{ scale: 1.05, x: -5, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleAction('skip')}
+                            className="h-14 px-8 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-all flex items-center gap-3 border border-transparent hover:border-white/10"
+                          >
+                            <X className="w-4 h-4" />
+                            Not Interested
+                          </motion.button>
+                          
+                          <div className="w-px h-8 bg-white/10" />
+
+                          <motion.button
+                            whileHover={{ scale: 1.05, x: 5, boxShadow: "0 0 40px rgba(255, 255, 255, 0.2)" }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleAction('like')}
+                            className="h-14 px-10 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] bg-white text-[#050505] flex items-center gap-3 group/interest"
+                          >
+                            <Heart className="w-5 h-5 fill-current transition-transform group-hover/interest:scale-125" />
+                            Interested
+                          </motion.button>
+                        </div>
+                      </div>
+                    </CardFooter>
                 </Card>
               </motion.div>
             )}

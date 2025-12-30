@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, Send, Plus, Camera, Loader2, MoreHorizontal, X, Sparkles, Flame, Zap, ShieldAlert, Heart } from "lucide-react";
+import { Plus, Camera, Loader2, MoreHorizontal, X, Sparkles, Flame, Zap, ShieldAlert, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
@@ -316,55 +316,35 @@ export default function Home() {
                   </p>
                 </CardContent>
 
-                <CardFooter className="p-6 pt-0 flex flex-col gap-6">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-6">
-                      <motion.button 
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="flex items-center gap-2 group/btn"
-                      >
-                        <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center group-hover/btn:bg-primary/20 transition-all">
-                          <MessageCircle className="w-5 h-5 text-white/60 group-hover/btn:text-primary transition-colors" />
-                        </div>
-                        <span className="text-xs font-black italic text-white/40 group-hover/btn:text-white transition-colors">{post.comments_count || 0}</span>
-                      </motion.button>
-                      
-                      <motion.button 
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="flex items-center gap-2 group/btn"
-                      >
-                        <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center group-hover/btn:bg-purple-500/20 transition-all">
-                          <Send className="w-5 h-5 text-white/60 group-hover/btn:text-purple-400 transition-colors" />
-                        </div>
-                      </motion.button>
-                    </div>
+                  <CardFooter className="p-6 pt-0 flex flex-col gap-6">
+                    <div className="flex items-center justify-center w-full">
+                      {/* Extraordinary Interaction Hub */}
+                      <div className="flex items-center gap-6 p-2 bg-white/5 rounded-[2.5rem] border border-white/10 backdrop-blur-3xl shadow-2xl">
+                        <motion.button
+                          whileHover={{ scale: 1.05, x: -5, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleMatchAction(post.profiles?.id, 'pass', post.id)}
+                          className="h-14 px-8 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-all flex items-center gap-3 border border-transparent hover:border-white/10"
+                        >
+                          <X className="w-4 h-4" />
+                          Not Interested
+                        </motion.button>
+                        
+                        <div className="w-px h-8 bg-white/10" />
 
-                    {/* Extraordinary Interaction Hub */}
-                    <div className="flex items-center gap-3 p-1.5 bg-white/5 rounded-[2rem] border border-white/10 backdrop-blur-xl">
-                      <motion.button
-                        whileHover={{ scale: 1.05, x: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleMatchAction(post.profiles?.id, 'pass', post.id)}
-                        className="h-11 px-5 rounded-2xl font-black text-[10px] uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2"
-                      >
-                        <ShieldAlert className="w-3.5 h-3.5" />
-                        Vibe Pass
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05, x: 2 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleMatchAction(post.profiles?.id, 'spark', post.id)}
-                        className="h-11 px-6 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-white text-[#050505] shadow-xl shadow-white/10 flex items-center gap-2"
-                      >
-                        <Flame className="w-4 h-4 fill-current" />
-                        Spark Energy
-                      </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.05, x: 5, boxShadow: "0 0 40px rgba(255, 255, 255, 0.2)" }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleMatchAction(post.profiles?.id, 'spark', post.id)}
+                          className="h-14 px-10 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] bg-white text-[#050505] flex items-center gap-3 group/interest"
+                        >
+                          <Heart className="w-5 h-5 fill-current transition-transform group-hover/interest:scale-125" />
+                          Interested
+                        </motion.button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 px-2">
+                    
+                    <div className="flex items-center justify-center gap-3 px-2">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map((i) => (
                         <div key={i} className="w-5 h-5 rounded-full border-2 border-[#050505] bg-primary/20 flex items-center justify-center overflow-hidden">
