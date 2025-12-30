@@ -48,11 +48,11 @@ export function Navbar() {
                 AI Coach
               </Button>
             </Link>
-            <Link href="/discovery">
-              <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary/20">
-                <User className="w-5 h-5 text-foreground" />
-              </Button>
-            </Link>
+              <Link href="/profile">
+                <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary/20">
+                  <User className="w-5 h-5 text-foreground" />
+                </Button>
+              </Link>
             <Button 
               variant="ghost" 
               size="icon" 
