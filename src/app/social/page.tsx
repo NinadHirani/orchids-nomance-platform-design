@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -262,17 +263,19 @@ export default function SocialPage() {
               <Card className="bg-card/50 border-border backdrop-blur-md rounded-[3rem] overflow-hidden shadow-2xl group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-6 flex flex-row items-center justify-between space-y-0">
                   <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <Avatar className="w-10 h-10 ring-2 ring-primary/30">
+                    <Link href={`/profile/${post.profiles?.id}`} className="relative group/avatar">
+                      <Avatar className="w-10 h-10 ring-2 ring-primary/30 transition-all group-hover/avatar:ring-primary">
                         <AvatarImage src={post.profiles?.avatar_url} />
                         <AvatarFallback className="bg-secondary">{post.profiles?.full_name?.[0]}</AvatarFallback>
                       </Avatar>
                       <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-background flex items-center justify-center">
                         <Zap className="w-2 h-2 text-primary-foreground fill-current" />
                       </div>
-                    </div>
+                    </Link>
                     <div>
-                      <p className="text-sm font-black italic tracking-tighter text-foreground">{post.profiles?.full_name}</p>
+                      <Link href={`/profile/${post.profiles?.id}`} className="text-sm font-black italic tracking-tighter text-foreground hover:text-primary transition-colors">
+                        {post.profiles?.full_name}
+                      </Link>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
                         {formatDistanceToNow(new Date(post.created_at))} AGO
                       </p>
