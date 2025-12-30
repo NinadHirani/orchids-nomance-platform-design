@@ -37,19 +37,21 @@ export function Navbar() {
                     isActive ? 'text-primary' : 'text-muted-foreground'
                   }`}
                 >
-                  <motion.div
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="relative"
-                  >
-                    {link.label === "Search" ? (
-                      <div className="p-2 rounded-xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#cc2366] shadow-lg shadow-pink-500/20 group-hover:shadow-pink-500/40 transition-shadow">
-                        <link.icon className="w-6 h-6 text-white" />
-                      </div>
-                    ) : (
-                      <link.icon className={`w-6 h-6 ${isActive ? 'drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]' : ''}`} />
-                    )}
-                  </motion.div>
+                    <motion.div
+                      whileHover={{ scale: 1.25, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      animate={link.label === "Search" ? { scale: [1, 1.05, 1] } : {}}
+                      transition={link.label === "Search" ? { duration: 3, repeat: Infinity, ease: "easeInOut" } : {}}
+                      className="relative"
+                    >
+                      {link.label === "Search" ? (
+                        <div className="p-3 rounded-2xl bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#cc2366] shadow-xl shadow-pink-500/30 group-hover:shadow-pink-500/50 transition-all border-2 border-white/20">
+                          <link.icon className="w-7 h-7 text-white" />
+                        </div>
+                      ) : (
+                        <link.icon className={`w-6 h-6 ${isActive ? 'drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]' : ''}`} />
+                      )}
+                    </motion.div>
                   <span className="hidden lg:inline">{link.label}</span>
                   
                   {isActive && link.label !== "Search" && (
@@ -99,13 +101,20 @@ export function Navbar() {
                 href={searchNavLink.href}
                 className="relative z-10"
               >
-                <motion.div 
-                  whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-                  whileTap={{ scale: 0.9 }}
-                  className="p-5 rounded-[2.5rem] bg-gradient-to-tr from-primary via-purple-600 to-pink-500 shadow-[0_20px_50px_rgba(var(--primary),0.4)] -translate-y-8 border-4 border-background active:scale-95 transition-all"
-                >
-                  <searchNavLink.icon className="w-8 h-8 text-white" />
-                </motion.div>
+                  <motion.div 
+                    whileHover={{ scale: 1.2, rotate: [0, -5, 5, 0] }}
+                    whileTap={{ scale: 0.9 }}
+                    animate={{ scale: [1, 1.05, 1], y: [-32, -36, -32] }}
+                    transition={{ 
+                      scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                      y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                    className="p-7 rounded-[3rem] bg-gradient-to-tr from-primary via-purple-600 to-pink-500 shadow-[0_25px_60px_rgba(var(--primary),0.5)] border-4 border-background active:scale-95 transition-all relative z-20"
+                  >
+                    <searchNavLink.icon className="w-10 h-10 text-white" />
+                    {/* Inner Glow */}
+                    <div className="absolute inset-0 rounded-[3rem] ring-4 ring-white/20 ring-inset pointer-events-none" />
+                  </motion.div>
               </Link>
               
               {/* Decorative Step/Connector */}
