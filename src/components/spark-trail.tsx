@@ -32,14 +32,14 @@ export function SparkTrail() {
       constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = (Math.random() - 0.5) * 3;
-        this.speedY = (Math.random() - 0.5) * 3;
+        this.size = Math.random() * 6 + 4; // Slightly larger for hearts
+        this.speedX = (Math.random() - 0.5) * 2;
+        this.speedY = (Math.random() - 0.5) * 2;
         this.opacity = 1;
-        this.decay = Math.random() * 0.02 + 0.01;
+        this.decay = Math.random() * 0.015 + 0.005;
         
-        // Spark colors: White, Gold, Primary-ish
-        const colors = ["#ffffff", "#ffd700", "#ff6b6b", "#4dabf7"];
+        // Romantic colors: Reds, Pinks, Purples, White
+        const colors = ["#ff4d4d", "#ff7eb9", "#ff007f", "#e0aaff", "#ffffff"];
         this.color = colors[Math.floor(Math.random() * colors.length)];
       }
 
@@ -47,30 +47,49 @@ export function SparkTrail() {
         this.x += this.speedX;
         this.y += this.speedY;
         this.opacity -= this.decay;
-        if (this.size > 0.1) this.size -= 0.05;
+        // Slow down size reduction for hearts
+        if (this.size > 0.5) this.size -= 0.02;
       }
 
       draw() {
         if (!ctx) return;
+        ctx.save();
         ctx.globalAlpha = this.opacity;
         ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
         
         // Add glow effect
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 15;
         ctx.shadowColor = this.color;
+        
+        // Draw Heart Shape
+        ctx.beginPath();
+        const x = this.x;
+        const y = this.y;
+        const s = this.size;
+        
+        ctx.moveTo(x, y + s / 4);
+        ctx.bezierCurveTo(x, y, x - s, y, x - s, y + s / 2);
+        ctx.bezierCurveTo(x - s, y + s, x, y + s * 1.5, x, y + s * 2);
+        ctx.bezierCurveTo(x, y + s * 1.5, x + s, y + s, x + s, y + s / 2);
+        ctx.bezierCurveTo(x + s, y, x, y, x, y + s / 4);
+        ctx.fill();
+        ctx.restore();
       }
     }
 
+    let isMouseDown = false;
+
     const handleMouseMove = (e: MouseEvent) => {
-      for (let i = 0; i < 3; i++) {
+      const count = isMouseDown ? 6 : 2; // More hearts when dragging
+      for (let i = 0; i < count; i++) {
         if (particles.length < maxParticles) {
           particles.push(new Particle(e.clientX, e.clientY));
         }
       }
     };
+
+    const handleMouseDown = () => { isMouseDown = true; };
+    const handleMouseUp = () => { isMouseDown = false; };
 
     const handleResize = () => {
       width = canvas.width = window.innerWidth;
@@ -94,11 +113,15 @@ export function SparkTrail() {
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("resize", handleResize);
     animate();
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
