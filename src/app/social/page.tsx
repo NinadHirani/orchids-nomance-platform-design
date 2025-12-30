@@ -225,8 +225,16 @@ export default function SocialPage() {
             {stories.map((group, idx) => (
               <motion.button 
                 key={idx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 20,
+                  delay: 0.1 + idx * 0.1 
+                }}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => {
                   setSelectedStory(group);
                   setStoryIndex(0);

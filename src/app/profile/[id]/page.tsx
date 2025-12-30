@@ -223,14 +223,51 @@ export default function PublicProfilePage() {
             </div>
 
             {/* Action Bar */}
-            <div className="pt-8 flex gap-4">
-               <Button className="flex-1 h-16 rounded-[2rem] bg-foreground text-background font-black text-lg uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex gap-3 shadow-xl">
-                 <Heart className="w-6 h-6 fill-current" />
-                 Send Spark
-               </Button>
-               <Button variant="outline" className="w-16 h-16 rounded-[2rem] border-2 border-border flex items-center justify-center hover:bg-secondary/20">
-                 <Zap className="w-6 h-6" />
-               </Button>
+            <div className="pt-8 relative">
+              {/* Tracing Arrow Animation */}
+              <div className="absolute -top-12 right-12 w-24 h-24 hidden lg:block pointer-events-none">
+                <svg viewBox="0 0 100 100" fill="none" className="w-full h-full rotate-45">
+                  <motion.path
+                    d="M10,10 Q50,10 50,50 Q50,90 90,90"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    className="text-primary/40"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.path
+                    d="M80,80 L90,90 L80,100"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    className="text-primary/40"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 0.5, repeat: Infinity }}
+                  />
+                </svg>
+              </div>
+
+              <div className="flex gap-4">
+                 <Button className="flex-1 h-16 rounded-[2rem] bg-foreground text-background font-black text-lg uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex gap-3 shadow-xl group">
+                   <motion.div
+                     whileHover={{ scale: 1.5, rotate: [0, -20, 20, 0] }}
+                     transition={{ duration: 0.5 }}
+                   >
+                    <Heart className="w-6 h-6 fill-current text-primary" />
+                   </motion.div>
+                   Send Spark
+                 </Button>
+                 <Button variant="outline" className="w-16 h-16 rounded-[2rem] border-2 border-border flex items-center justify-center hover:bg-secondary/20 group">
+                   <motion.div
+                     whileHover={{ y: -5, scale: 1.2 }}
+                   >
+                    <Zap className="w-6 h-6 group-hover:text-primary group-hover:fill-current transition-colors" />
+                   </motion.div>
+                 </Button>
+              </div>
             </div>
           </div>
         </div>
