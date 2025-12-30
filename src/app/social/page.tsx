@@ -150,7 +150,7 @@ export default function SocialPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -161,7 +161,7 @@ export default function SocialPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white pb-20 overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden">
       {/* Extraordinary Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
@@ -179,7 +179,7 @@ export default function SocialPage() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Card className="bg-white/5 border-white/10 backdrop-blur-md rounded-[3rem] overflow-hidden shadow-2xl group hover:border-primary/20 transition-all duration-500">
+              <Card className="bg-card/50 border-border backdrop-blur-md rounded-[3rem] overflow-hidden shadow-2xl group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-6 flex flex-row items-center justify-between space-y-0">
                   <div className="flex items-center gap-4">
                     <div className="relative">
@@ -187,18 +187,18 @@ export default function SocialPage() {
                         <AvatarImage src={post.profiles?.avatar_url} />
                         <AvatarFallback className="bg-secondary">{post.profiles?.full_name?.[0]}</AvatarFallback>
                       </Avatar>
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-[#050505] flex items-center justify-center">
-                        <Zap className="w-2 h-2 text-white fill-current" />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-background flex items-center justify-center">
+                        <Zap className="w-2 h-2 text-primary-foreground fill-current" />
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm font-black italic tracking-tighter text-white">{post.profiles?.full_name}</p>
+                      <p className="text-sm font-black italic tracking-tighter text-foreground">{post.profiles?.full_name}</p>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
                         {formatDistanceToNow(new Date(post.created_at))} AGO
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-white/5">
+                  <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-accent">
                     <MoreHorizontal className="w-5 h-5" />
                   </Button>
                 </CardHeader>
@@ -217,7 +217,7 @@ export default function SocialPage() {
                 )}
 
                 <CardContent className="p-8 pt-2">
-                  <p className="text-lg font-medium leading-relaxed tracking-tight text-white/90 italic">
+                  <p className="text-lg font-medium leading-relaxed tracking-tight text-foreground/90 italic">
                     &quot;{post.content}&quot;
                   </p>
                 </CardContent>
@@ -225,24 +225,24 @@ export default function SocialPage() {
                   <CardFooter className="p-6 pt-0 flex flex-col gap-6">
                     <div className="flex items-center justify-center w-full">
                       {/* Extraordinary Interaction Hub */}
-                      <div className="flex items-center gap-6 p-2 bg-white/5 rounded-[2.5rem] border border-white/10 backdrop-blur-3xl shadow-2xl">
+                      <div className="flex items-center gap-6 p-2 bg-card/80 rounded-[2.5rem] border border-border backdrop-blur-3xl shadow-2xl">
                         <motion.button
-                          whileHover={{ scale: 1.05, x: -5, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                          whileHover={{ scale: 1.05, x: -5, backgroundColor: "hsl(var(--accent))" }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleMatchAction(post.profiles?.id, 'pass', post.id)}
-                          className="h-14 px-8 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-all flex items-center gap-3 border border-transparent hover:border-white/10"
+                          className="h-14 px-8 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-all flex items-center gap-3 border border-transparent hover:border-border"
                         >
                           <X className="w-4 h-4" />
                           Not Interested
                         </motion.button>
                         
-                        <div className="w-px h-8 bg-white/10" />
+                        <div className="w-px h-8 bg-border" />
 
                         <motion.button
-                          whileHover={{ scale: 1.05, x: 5, boxShadow: "0 0 40px rgba(255, 255, 255, 0.2)" }}
+                          whileHover={{ scale: 1.05, x: 5, boxShadow: "0 0 40px rgba(var(--primary), 0.2)" }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => handleMatchAction(post.profiles?.id, 'spark', post.id)}
-                          className="h-14 px-10 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] bg-white text-[#050505] flex items-center gap-3 group/interest"
+                          className="h-14 px-10 rounded-[2rem] font-black text-[12px] uppercase tracking-[0.2em] bg-foreground text-background flex items-center gap-3 group/interest"
                         >
                           <Heart className="w-5 h-5 fill-current transition-transform group-hover/interest:scale-125" />
                           Interested
@@ -253,14 +253,14 @@ export default function SocialPage() {
                     <div className="flex items-center justify-center gap-3 px-2">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map((i) => (
-                        <div key={i} className="w-5 h-5 rounded-full border-2 border-[#050505] bg-primary/20 flex items-center justify-center overflow-hidden">
+                        <div key={i} className="w-5 h-5 rounded-full border-2 border-background bg-primary/20 flex items-center justify-center overflow-hidden">
                            <Avatar className="w-full h-full">
                              <AvatarImage src={`https://i.pravatar.cc/100?u=${post.id}${i}`} />
                            </Avatar>
                         </div>
                       ))}
                     </div>
-                    <span className="text-[10px] font-black italic tracking-tight text-white/40">
+                    <span className="text-[10px] font-black italic tracking-tight text-muted-foreground">
                       {post.likes_count || 0} FREQUENCIES ALIGNED
                     </span>
                   </div>
@@ -271,7 +271,7 @@ export default function SocialPage() {
         </div>
 
         {/* Stories & Create Post Moved to Bottom (Footer Section) */}
-        <div className="mt-16 space-y-12 border-t border-white/10 pt-16">
+        <div className="mt-16 space-y-12 border-t border-border pt-16">
           {/* Stories */}
           <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
             <motion.button 
@@ -300,7 +300,7 @@ export default function SocialPage() {
                 className="flex flex-col items-center gap-2 shrink-0 group"
               >
                 <div className="w-16 h-16 rounded-3xl p-1 bg-gradient-to-tr from-primary via-purple-600 to-pink-500 shadow-xl shadow-primary/10">
-                  <div className="w-full h-full rounded-2xl border-4 border-[#050505] overflow-hidden">
+                  <div className="w-full h-full rounded-2xl border-4 border-background overflow-hidden">
                     <Avatar className="w-full h-full rounded-none">
                       <AvatarImage src={group.user?.avatar_url} className="object-cover" />
                       <AvatarFallback className="bg-secondary rounded-none">{group.user?.full_name?.[0]}</AvatarFallback>
@@ -319,7 +319,7 @@ export default function SocialPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Card className="bg-white/5 border-white/10 backdrop-blur-2xl rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <Card className="bg-card/50 border-border backdrop-blur-2xl rounded-[2.5rem] overflow-hidden shadow-2xl">
               <CardContent className="p-6 flex items-center gap-6">
                 <Avatar className="w-12 h-12 ring-2 ring-primary/20">
                   <AvatarImage src={user?.user_metadata?.avatar_url} />
@@ -327,11 +327,11 @@ export default function SocialPage() {
                 </Avatar>
                 <Dialog open={isCreatingPost} onOpenChange={setIsCreatingPost}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" className="flex-1 justify-start text-muted-foreground hover:bg-white/5 rounded-2xl h-12 px-6 font-bold tracking-tight italic">
+                    <Button variant="ghost" className="flex-1 justify-start text-muted-foreground hover:bg-accent rounded-2xl h-12 px-6 font-bold tracking-tight italic">
                       What&apos;s your current frequency?
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px] bg-[#0a0a0a] border-white/10 text-white rounded-[2rem]">
+                  <DialogContent className="sm:max-w-[425px] bg-background border-border text-foreground rounded-[2rem]">
                     <DialogHeader>
                       <DialogTitle className="text-2xl font-black italic tracking-tighter">SHARE ENERGY</DialogTitle>
                     </DialogHeader>
@@ -340,7 +340,7 @@ export default function SocialPage() {
                         placeholder="Manifest your thoughts..." 
                         value={newPostContent}
                         onChange={(e) => setNewPostContent(e.target.value)}
-                        className="min-h-[150px] bg-white/5 border-white/10 rounded-2xl focus:ring-primary"
+                        className="min-h-[150px] bg-accent/50 border-border rounded-2xl focus:ring-primary"
                       />
                       <div className="space-y-2">
                         <label className="text-xs font-black uppercase tracking-widest text-muted-foreground px-2">Visual Aura (URL)</label>
@@ -348,14 +348,14 @@ export default function SocialPage() {
                           placeholder="https://aura.link/..." 
                           value={newPostImage}
                           onChange={(e) => setNewPostImage(e.target.value)}
-                          className="bg-white/5 border-white/10 rounded-xl h-12"
+                          className="bg-accent/50 border-border rounded-xl h-12"
                         />
                       </div>
                     </div>
                     <Button onClick={createPost} className="w-full rounded-2xl h-14 font-black text-lg bg-gradient-to-r from-primary to-purple-600 border-none shadow-xl shadow-primary/20">EMIT FREQUENCY</Button>
                   </DialogContent>
                 </Dialog>
-                <Button variant="ghost" size="icon" className="rounded-2xl w-12 h-12 bg-white/5 hover:bg-primary/20 text-primary transition-all">
+                <Button variant="ghost" size="icon" className="rounded-2xl w-12 h-12 bg-accent/50 hover:bg-primary/20 text-primary transition-all">
                   <Zap className="w-6 h-6 fill-current" />
                 </Button>
               </CardContent>
@@ -367,65 +367,65 @@ export default function SocialPage() {
       {/* Story Viewer: Extraordinary Immersive Design */}
       <AnimatePresence>
         {selectedStory && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl flex items-center justify-center"
-          >
-            <div className="relative w-full max-w-lg aspect-[9/16] bg-secondary/5 rounded-[3rem] overflow-hidden shadow-2xl border border-white/10">
-              {/* Progress Bars */}
-              <div className="absolute top-8 left-8 right-8 flex gap-2 z-20">
-                {selectedStory.items.map((_: any, i: number) => (
-                  <div key={i} className="h-1 flex-1 bg-white/10 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-white"
-                      initial={{ width: 0 }}
-                      animate={{ width: i === storyIndex ? "100%" : i < storyIndex ? "100%" : "0%" }}
-                      transition={{ duration: i === storyIndex ? 5 : 0, ease: "linear" }}
-                      onAnimationComplete={() => {
-                        if (i === storyIndex) nextStory();
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* Header */}
-              <div className="absolute top-14 left-8 right-8 flex items-center justify-between z-20">
-                <div className="flex items-center gap-3">
-                  <Avatar className="w-10 h-10 border-2 border-primary ring-4 ring-primary/20">
-                    <AvatarImage src={selectedStory.user?.avatar_url} />
-                    <AvatarFallback>{selectedStory.user?.full_name?.[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-black italic tracking-tighter text-white">
-                      {selectedStory.user?.full_name}
-                    </span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE FREQUENCY</span>
-                  </div>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-3xl flex items-center justify-center"
+            >
+              <div className="relative w-full max-w-lg aspect-[9/16] bg-card/50 rounded-[3rem] overflow-hidden shadow-2xl border border-border">
+                {/* Progress Bars */}
+                <div className="absolute top-8 left-8 right-8 flex gap-2 z-20">
+                  {selectedStory.items.map((_: any, i: number) => (
+                    <div key={i} className="h-1 flex-1 bg-foreground/10 rounded-full overflow-hidden">
+                      <motion.div 
+                        className="h-full bg-foreground"
+                        initial={{ width: 0 }}
+                        animate={{ width: i === storyIndex ? "100%" : i < storyIndex ? "100%" : "0%" }}
+                        transition={{ duration: i === storyIndex ? 5 : 0, ease: "linear" }}
+                        onAnimationComplete={() => {
+                          if (i === storyIndex) nextStory();
+                        }}
+                      />
+                    </div>
+                  ))}
                 </div>
-                <button onClick={() => setSelectedStory(null)} className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-white backdrop-blur-md">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
 
-              {/* Story Image */}
-              <img 
-                src={selectedStory.items[storyIndex].image_url} 
-                className="w-full h-full object-cover"
-                alt="Story"
-              />
+                {/* Header */}
+                <div className="absolute top-14 left-8 right-8 flex items-center justify-between z-20">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-10 h-10 border-2 border-primary ring-4 ring-primary/20">
+                      <AvatarImage src={selectedStory.user?.avatar_url} />
+                      <AvatarFallback>{selectedStory.user?.full_name?.[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-black italic tracking-tighter text-foreground">
+                        {selectedStory.user?.full_name}
+                      </span>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE FREQUENCY</span>
+                    </div>
+                  </div>
+                  <button onClick={() => setSelectedStory(null)} className="w-10 h-10 rounded-2xl bg-accent/20 flex items-center justify-center text-foreground backdrop-blur-md">
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
 
-              {/* Interaction Overlay */}
-              <div className="absolute bottom-12 left-8 right-8 z-20">
-                 <div className="flex items-center gap-4">
-                    <Input className="flex-1 bg-white/10 border-white/10 rounded-2xl h-14 backdrop-blur-xl text-white placeholder:text-white/40 placeholder:italic font-bold" placeholder="Send a spark..." />
-                    <Button className="w-14 h-14 rounded-2xl bg-white text-[#050505] shadow-xl shadow-white/10">
-                       <Zap className="w-6 h-6 fill-current" />
-                    </Button>
-                 </div>
-              </div>
+                {/* Story Image */}
+                <img 
+                  src={selectedStory.items[storyIndex].image_url} 
+                  className="w-full h-full object-cover"
+                  alt="Story"
+                />
+
+                {/* Interaction Overlay */}
+                <div className="absolute bottom-12 left-8 right-8 z-20">
+                   <div className="flex items-center gap-4">
+                      <Input className="flex-1 bg-background/50 border-border rounded-2xl h-14 backdrop-blur-xl text-foreground placeholder:text-muted-foreground placeholder:italic font-bold" placeholder="Send a spark..." />
+                      <Button className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground shadow-xl shadow-primary/10">
+                         <Zap className="w-6 h-6 fill-current" />
+                      </Button>
+                   </div>
+                </div>
 
               {/* Navigation Controls */}
               <div className="absolute inset-0 flex z-10">
