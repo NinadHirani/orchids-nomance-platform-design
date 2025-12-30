@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Heart, User } from "lucide-react";
+import { Heart, User, MessageCircle } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { supabase } from "@/lib/supabase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,6 +38,11 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <ModeToggle />
+            <Link href="/messages">
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <MessageCircle className="w-5 h-5" />
+              </Button>
+            </Link>
             <Link href="/profile">
               <Button variant="ghost" size="icon" className="rounded-full overflow-hidden p-0 border border-border/50">
                 <Avatar className="w-8 h-8">

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Heart, Sparkles, Users, MessageCircle } from "lucide-react";
+import { Heart, Sparkles, Users, MessageCircle, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function Navbar() {
@@ -11,7 +11,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/social", label: "Social", icon: MessageCircle },
     { href: "/discovery", label: "Discovery", icon: Sparkles },
-    { href: "/messages", label: "Messages", icon: MessageCircle },
+    { href: "/search", label: "Search", icon: Search },
     { href: "/matches", label: "Matches", icon: Heart },
     { href: "/events", label: "Events", icon: Users },
   ];
