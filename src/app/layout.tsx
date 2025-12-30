@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import { Navbar } from "@/components/navbar";
 import { Header } from "@/components/header";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,19 +27,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <Header />
-          <main className="pt-16 pb-16">
-            {children}
-          </main>
-          <Navbar />
-          <Toaster position="top-center" richColors />
-          <VisualEditsMessenger />
-        </body>
-    </html>
-  );
+    return (
+      <html lang="en" suppressHydrationWarning>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              <main className="pt-16 pb-16">
+                {children}
+              </main>
+              <Navbar />
+              <Toaster position="top-center" richColors />
+              <VisualEditsMessenger />
+            </ThemeProvider>
+          </body>
+      </html>
+    );
+
 }
