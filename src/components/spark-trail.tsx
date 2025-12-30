@@ -29,14 +29,14 @@ export function SparkTrail() {
       opacity: number;
       decay: number;
 
-      constructor(x: number, y: number) {
+        constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 6 + 4; // Slightly larger for hearts
-        this.speedX = (Math.random() - 0.5) * 2;
-        this.speedY = (Math.random() - 0.5) * 2;
+        this.size = Math.random() * 4 + 3; // Smaller hearts
+        this.speedX = (Math.random() - 0.5) * 0.8; // Reduced spread
+        this.speedY = (Math.random() - 0.5) * 0.8; // Reduced spread
         this.opacity = 1;
-        this.decay = Math.random() * 0.015 + 0.005;
+        this.decay = 0.008; // Approximately 2 seconds at 60fps
         
         // Romantic colors: Reds, Pinks, Purples, White
         const colors = ["#ff4d4d", "#ff7eb9", "#ff007f", "#e0aaff", "#ffffff"];
@@ -47,8 +47,8 @@ export function SparkTrail() {
         this.x += this.speedX;
         this.y += this.speedY;
         this.opacity -= this.decay;
-        // Slow down size reduction for hearts
-        if (this.size > 0.5) this.size -= 0.02;
+        // Size decay adjusted to match lifetime
+        if (this.size > 0.1) this.size -= (this.size / (1 / this.decay));
       }
 
       draw() {
