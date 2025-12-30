@@ -168,40 +168,6 @@ export default function DiscoveryPage() {
       
       <main className="container mx-auto px-4 pt-12 pb-24 flex flex-col items-center">
         <div className="max-w-xl w-full">
-          {/* Mood Selector */}
-          <div className="mb-8">
-            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3 text-center">How do you feel today?</h3>
-            <div className="flex justify-center gap-3">
-              {MOODS.map((mood) => (
-                <button
-                  key={mood.id}
-                  onClick={() => handleMoodChange(mood.id)}
-                  disabled={moodMatching}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
-                    selectedMood === mood.id 
-                      ? "border-primary bg-primary/5 shadow-lg shadow-primary/10" 
-                      : "border-border bg-card hover:border-primary/30"
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${mood.color}`}>
-                    <mood.icon className="w-6 h-6" />
-                  </div>
-                  <span className={`font-bold text-sm ${selectedMood === mood.id ? "text-primary" : "text-foreground"}`}>
-                    {mood.label}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground max-w-[80px] text-center leading-tight">
-                    {mood.description}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <header className="mb-8 text-center">
-            <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">Daily Batch</h1>
-            <p className="text-muted-foreground">Focus on quality. You have {5 - (dailyLimitReached ? 5 : currentIndex)} matches left today.</p>
-          </header>
-
           <AnimatePresence mode="wait">
             {moodMatching ? (
               <motion.div
@@ -337,6 +303,40 @@ export default function DiscoveryPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Moved Header and Tabs to bottom */}
+          <div className="mt-12 space-y-8 border-t border-border pt-12 pb-8">
+            <header className="text-center">
+              <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">Daily Batch</h1>
+              <p className="text-muted-foreground">Focus on quality. You have {5 - (dailyLimitReached ? 5 : currentIndex)} matches left today.</p>
+            </header>
+
+            {/* Mood Selector (Tabs) */}
+            <div className="bg-secondary/5 p-6 rounded-[2.5rem] border border-border">
+              <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 text-center">How do you feel today?</h3>
+              <div className="flex justify-center gap-3">
+                {MOODS.map((mood) => (
+                  <button
+                    key={mood.id}
+                    onClick={() => handleMoodChange(mood.id)}
+                    disabled={moodMatching}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+                      selectedMood === mood.id 
+                        ? "border-primary bg-primary/5 shadow-lg shadow-primary/10" 
+                        : "border-border bg-card hover:border-primary/30"
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${mood.color}`}>
+                      <mood.icon className="w-5 h-5" />
+                    </div>
+                    <span className={`font-bold text-[10px] uppercase tracking-widest ${selectedMood === mood.id ? "text-primary" : "text-foreground"}`}>
+                      {mood.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
 
           <footer className="mt-12 text-center text-sm text-muted-foreground">
             <p>Trust Score: 98% • Active Community</p>
