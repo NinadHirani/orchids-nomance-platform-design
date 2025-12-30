@@ -2,19 +2,19 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Heart, Sparkles, Users, MessageCircle, Search } from "lucide-react";
-import { usePathname } from "next/navigation";
-
-export function Navbar() {
-  const pathname = usePathname();
-
-  const navLinks = [
-    { href: "/social", label: "Social", icon: MessageCircle },
-    { href: "/discovery", label: "Discovery", icon: Sparkles },
-    { href: "/search", label: "Search", icon: Search },
-    { href: "/matches", label: "Matches", icon: Heart },
-    { href: "/events", label: "Events", icon: Users },
-  ];
+  import { Heart, Sparkles, Users, MessageCircle, Search, LayoutGrid } from "lucide-react";
+  import { usePathname } from "next/navigation";
+  
+  export function Navbar() {
+    const pathname = usePathname();
+  
+    const navLinks = [
+      { href: "/discovery", label: "Discovery", icon: Sparkles },
+      { href: "/matches", label: "Matches", icon: Heart },
+      { href: "/search", label: "Search", icon: Search },
+      { href: "/events", label: "Events", icon: Users },
+      { href: "/social", label: "Social", icon: LayoutGrid },
+    ];
 
   return (
     <nav className="fixed bottom-0 w-full border-t border-border bg-background/80 backdrop-blur-xl z-50">

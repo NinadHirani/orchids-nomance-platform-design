@@ -165,11 +165,17 @@ export default function SocialPage() {
         return;
     }
 
+    // Remove from feed immediately for 'spark' too
+    setPosts(prev => prev.filter(p => p.id !== postId));
+
     const { error } = await supabase.from("matches").insert({
       user_1: user.id,
       user_2: targetUserId,
       status: 'pending'
     });
+
+    // Update likes count on the post
+    await supabase.rpc('increment_likes_count', { post_id: postId });
     
     if (error) {
       const { data: reverseLike } = await supabase
