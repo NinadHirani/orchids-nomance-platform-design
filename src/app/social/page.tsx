@@ -367,24 +367,27 @@ export default function SocialPage() {
 
       {/* Story Viewer: Extraordinary Immersive Design */}
       <AnimatePresence>
-          {selectedStory && (
+        {selectedStory && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedStory(null)}
-              className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-3xl flex items-center justify-center p-4 cursor-pointer"
+              className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4 cursor-pointer"
             >
-              <div 
+              <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 1.1, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-lg aspect-[9/16] bg-card/50 rounded-[3rem] overflow-hidden shadow-2xl border border-border cursor-default"
+                className="relative w-full max-w-lg aspect-[9/16] bg-card rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 cursor-default"
               >
                 {/* Progress Bars */}
                 <div className="absolute top-8 left-8 right-8 flex gap-2 z-20">
                   {selectedStory.items.map((_: any, i: number) => (
-                    <div key={i} className="h-1 flex-1 bg-foreground/10 rounded-full overflow-hidden">
+                    <div key={i} className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
                       <motion.div 
-                        className="h-full bg-foreground"
+                        className="h-full bg-white"
                         initial={{ width: 0 }}
                         animate={{ width: i === storyIndex ? "100%" : i < storyIndex ? "100%" : "0%" }}
                         transition={{ duration: i === storyIndex ? 5 : 0, ease: "linear" }}
@@ -404,7 +407,7 @@ export default function SocialPage() {
                       <AvatarFallback>{selectedStory.user?.full_name?.[0]}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-sm font-black italic tracking-tighter text-foreground">
+                      <span className="text-sm font-black italic tracking-tighter text-white">
                         {selectedStory.user?.full_name}
                       </span>
                       <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE FREQUENCY</span>
@@ -414,7 +417,7 @@ export default function SocialPage() {
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setSelectedStory(null)} 
-                    className="w-10 h-10 rounded-2xl bg-foreground/10 flex items-center justify-center text-foreground backdrop-blur-md border border-foreground/10 hover:bg-foreground/20 transition-colors"
+                    className="w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white backdrop-blur-xl border border-white/10"
                   >
                     <X className="w-6 h-6" />
                   </motion.button>
@@ -442,7 +445,7 @@ export default function SocialPage() {
                 <div className="w-1/3 h-full" onClick={prevStory} />
                 <div className="w-2/3 h-full" onClick={nextStory} />
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
