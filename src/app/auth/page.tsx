@@ -127,16 +127,16 @@ function AuthContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#050505] relative overflow-hidden px-4 py-12 perspective-[1500px]">
+    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(circle_at_center,oklch(0.18_0.06_25)_0%,oklch(0.1_0.02_25)_100%)] relative overflow-hidden px-4 py-12 perspective-[1500px]">
       <FallingHearts />
       {/* 3D Perspective Grid Floor */}
       <div 
         className="absolute inset-0 z-0 opacity-20 pointer-events-none"
         style={{
           background: `
-            linear-gradient(to bottom, transparent 0%, #050505 100%),
-            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)
+            linear-gradient(to bottom, transparent 0%, oklch(0.1 0.02 25) 100%),
+            linear-gradient(90deg, oklch(0.35 0.1 25 / 0.1) 1px, transparent 1px),
+            linear-gradient(oklch(0.35 0.1 25 / 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '100% 100%, 50px 50px, 50px 50px',
           transform: 'rotateX(60deg) translateY(100px) scale(3)',
@@ -341,7 +341,7 @@ function AuthContent() {
 export default function AuthPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+      <div className="min-h-screen flex items-center justify-center bg-[oklch(0.1_0.02_25)]">
         <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
