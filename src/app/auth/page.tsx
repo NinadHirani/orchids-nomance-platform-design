@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 function FallingHearts() {
   const hearts = [...Array(30)];
-  const colors = ["#ff4d4d", "#e63946", "#d62828", "#9b2226", "#b91c1c"];
+  const colors = ["#fb7185", "#f43f5e", "#e11d48", "#be123c", "#9f1239", "#ff4d4d"];
 
   return (
     <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -127,16 +127,16 @@ function AuthContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#050505] relative overflow-hidden px-4 py-12 perspective-[1500px]">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFE4E6] relative overflow-hidden px-4 py-12 perspective-[1500px]">
       <FallingHearts />
       {/* 3D Perspective Grid Floor */}
       <div 
-        className="absolute inset-0 z-0 opacity-20 pointer-events-none"
+        className="absolute inset-0 z-0 opacity-10 pointer-events-none"
         style={{
           background: `
-            linear-gradient(to bottom, transparent 0%, #050505 100%),
-            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)
+            linear-gradient(to bottom, transparent 0%, #FFE4E6 100%),
+            linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px),
+            linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px)
           `,
           backgroundSize: '100% 100%, 50px 50px, 50px 50px',
           transform: 'rotateX(60deg) translateY(100px) scale(3)',
@@ -157,14 +157,14 @@ function AuthContent() {
             }}
             animate={{ 
               y: ["0%", "100%"],
-              opacity: [0, 1, 0]
+              opacity: [0, 0.4, 0]
             }}
             transition={{ 
               duration: Math.random() * 10 + 10, 
               repeat: Infinity, 
               delay: Math.random() * 10 
             }}
-            className="absolute w-1 h-1 bg-primary/30 rounded-full blur-[1px]"
+            className="absolute w-1.5 h-1.5 bg-primary/20 rounded-full blur-[1px]"
           />
         ))}
       </div>
@@ -179,7 +179,7 @@ function AuthContent() {
           {/* 3D Rotating Logo Wrapper */}
           <div className="relative inline-flex items-center justify-center mb-8 perspective-[1000px]">
             {/* Logo Shadow/Reflection on Floor */}
-            <div className="absolute -bottom-12 w-32 h-8 bg-primary/20 blur-[20px] rounded-full scale-y-50 z-0" />
+            <div className="absolute -bottom-12 w-32 h-8 bg-primary/10 blur-[20px] rounded-full scale-y-50 z-0" />
             
             <motion.div
               animate={{
@@ -193,12 +193,12 @@ function AuthContent() {
               className="relative z-10 preserve-3d"
             >
               {/* Glowing Aura around rotating logo */}
-              <div className="absolute inset-0 bg-primary/10 blur-[50px] rounded-full" />
+              <div className="absolute inset-0 bg-primary/5 blur-[50px] rounded-full" />
               
               <img
                 src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/logo-1767110846410.png?width=8000&height=8000&resize=contain"
                 alt="Nomance Logo"
-                className="w-28 h-28 object-contain drop-shadow-[0_0_30px_rgba(var(--primary),0.5)]"
+                className="w-28 h-28 object-contain drop-shadow-[0_0_20px_rgba(var(--primary),0.3)]"
               />
             </motion.div>
           </div>
@@ -208,28 +208,28 @@ function AuthContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl font-black italic tracking-tighter text-white mb-2 drop-shadow-2xl">NOMANCE</h1>
+            <h1 className="text-5xl font-black italic tracking-tighter text-zinc-900 mb-2 drop-shadow-sm">NOMANCE</h1>
             <p className="text-primary font-black tracking-tight uppercase text-[10px] tracking-[0.4em] opacity-80">Frequency Integration</p>
           </motion.div>
         </div>
 
         <div className="relative">
           {/* 3D Card Edge Shadow */}
-          <div className="absolute -inset-0.5 bg-gradient-to-br from-primary/50 to-purple-600/50 rounded-[3rem] blur opacity-20" />
+          <div className="absolute -inset-0.5 bg-gradient-to-br from-primary/30 to-rose-400/30 rounded-[3rem] blur opacity-20" />
           
-          <Card className="bg-[#0a0a0a]/90 border-white/5 backdrop-blur-xl rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] relative z-10 border-[1px]">
+          <Card className="bg-white/80 border-black/5 backdrop-blur-xl rounded-[3rem] overflow-hidden shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] relative z-10 border-[1px]">
             {/* Animated Light Sweep */}
             <motion.div
               animate={{ x: ["-100%", "200%"] }}
               transition={{ duration: 4, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 pointer-events-none"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent skew-x-12 pointer-events-none"
             />
             
             <CardHeader className="p-10 pb-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 opacity-10">
-                <Box className="w-24 h-24 rotate-12" />
+              <div className="absolute top-0 right-0 p-8 opacity-5">
+                <Box className="w-24 h-24 rotate-12 text-zinc-900" />
               </div>
-              <CardTitle className="text-3xl font-black tracking-tighter italic text-white">
+              <CardTitle className="text-3xl font-black tracking-tighter italic text-zinc-900">
                 {isSignUp ? "Initialize" : "Connect"}
               </CardTitle>
               <CardDescription className="font-bold text-zinc-500 mt-2">
@@ -248,7 +248,7 @@ function AuthContent() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-white/5 border-white/10 rounded-2xl h-16 px-6 font-bold text-white focus:border-primary/50 focus:ring-primary/20 transition-all text-lg"
+                    className="bg-black/5 border-black/10 rounded-2xl h-16 px-6 font-bold text-zinc-900 focus:border-primary/50 focus:ring-primary/20 transition-all text-lg placeholder:text-zinc-400"
                   />
                 </div>
                 
@@ -261,13 +261,13 @@ function AuthContent() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-white/5 border-white/10 rounded-2xl h-16 px-6 font-bold text-white focus:border-primary/50 focus:ring-primary/20 transition-all text-lg"
+                    className="bg-black/5 border-black/10 rounded-2xl h-16 px-6 font-bold text-zinc-900 focus:border-primary/50 focus:ring-primary/20 transition-all text-lg placeholder:text-zinc-400"
                   />
                 </div>
 
                 <Button 
                   type="submit" 
-                  className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black text-[14px] uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(var(--primary),0.3)] transition-all group overflow-hidden relative"
+                  className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-[14px] uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(var(--primary),0.3)] transition-all group overflow-hidden relative"
                   disabled={loading}
                 >
                   {loading ? (
@@ -279,21 +279,21 @@ function AuthContent() {
                     </span>
                   )}
                   {/* Subtle 3D Depth on Button */}
-                  <div className="absolute inset-x-0 top-0 h-1/2 bg-white/20 pointer-events-none" />
+                  <div className="absolute inset-x-0 top-0 h-1/2 bg-white/10 pointer-events-none" />
                 </Button>
               </form>
             </CardContent>
 
             <CardFooter className="p-10 pt-0 flex flex-col gap-8">
-              <div className="flex items-center gap-4 w-full opacity-20">
-                <div className="h-px bg-white flex-1" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white">OR</span>
-                <div className="h-px bg-white flex-1" />
+              <div className="flex items-center gap-4 w-full opacity-10">
+                <div className="h-px bg-black flex-1" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-black">OR</span>
+                <div className="h-px bg-black flex-1" />
               </div>
               
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="w-full text-xs font-black text-zinc-400 hover:text-primary transition-colors flex items-center justify-center gap-2 uppercase tracking-widest"
+                className="w-full text-xs font-black text-zinc-500 hover:text-primary transition-colors flex items-center justify-center gap-2 uppercase tracking-widest"
               >
                 {isSignUp ? "Existing Frequency? Sign In" : "New Signal? Initialize Aura"}
               </button>
@@ -302,11 +302,11 @@ function AuthContent() {
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-10 px-4 opacity-40">
-          <div className="flex flex-col items-center gap-2 group cursor-default">
+          <div className="flex flex-col items-center gap-2 group cursor-default text-zinc-900">
             <ShieldCheck className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
             <span className="text-[7px] font-black uppercase tracking-[0.3em] text-center">Encrypted<br/>Intent</span>
           </div>
-          <div className="flex flex-col items-center gap-2 group cursor-default">
+          <div className="flex flex-col items-center gap-2 group cursor-default text-zinc-900">
             <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
             <span className="text-[7px] font-black uppercase tracking-[0.3em] text-center">Verified<br/>Consciousness</span>
           </div>
@@ -322,7 +322,7 @@ function AuthContent() {
             x: [0, 20, 0]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-20 -left-20 w-64 h-64 border border-white/5 rounded-[4rem] rotate-12"
+          className="absolute -top-20 -left-20 w-64 h-64 border border-black/5 rounded-[4rem] rotate-12"
         />
         <motion.div
           animate={{ 
@@ -331,7 +331,7 @@ function AuthContent() {
             x: [0, -30, 0]
           }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-40 -right-40 w-96 h-96 border border-white/5 rounded-full"
+          className="absolute -bottom-40 -right-40 w-96 h-96 border border-black/5 rounded-full"
         />
       </div>
     </div>
@@ -341,7 +341,7 @@ function AuthContent() {
 export default function AuthPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FFE4E6]">
         <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
