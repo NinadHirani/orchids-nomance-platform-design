@@ -621,7 +621,7 @@ export default function SocialPage() {
       {/* Extraordinary Background Elements - TRULY STUCK */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/20 blur-[150px] rounded-full" />
-        <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-purple-600/20 blur-[150px] rounded-full" />
+        <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-accent/20 blur-[150px] rounded-full" />
       </div>
 
       <main className="h-full overflow-y-auto no-scrollbar scroll-smooth relative z-10">
