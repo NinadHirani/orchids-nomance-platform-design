@@ -8,6 +8,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AuthProvider } from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LayoutMain } from "@/components/layout-main";
 import { SparkTrail } from "@/components/spark-trail";
 
 const geistSans = Geist({
@@ -43,9 +44,9 @@ export default function RootLayout({
             >
               <AuthProvider>
                 <Header />
-                <main className="pt-16 min-h-[calc(100vh-64px)]">
+                <LayoutMain>
                   {children}
-                </main>
+                </LayoutMain>
                   <Footer />
                   <Navbar />
                   <SparkTrail />
