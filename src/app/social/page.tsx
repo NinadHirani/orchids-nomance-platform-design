@@ -427,11 +427,6 @@ export default function SocialPage() {
       <main className="container mx-auto px-4 pt-12 pb-24 max-w-2xl relative z-10">
         {/* Stories & Quick Emit */}
         <div className="mb-12 space-y-8">
-          <div className="flex items-center justify-between px-2">
-            <h2 className="text-xl font-black italic tracking-tighter uppercase">Recent Moments</h2>
-            <div className="h-px flex-1 mx-6 bg-border/50" />
-          </div>
-          
           {/* Stories */}
           <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
             <input 
@@ -633,10 +628,6 @@ export default function SocialPage() {
 
         {/* Feed: Extraordinary "Asymmetric" Design */}
         <div className="space-y-12">
-          <div className="flex items-center justify-between px-2 mb-8">
-            <h2 className="text-xl font-black italic tracking-tighter uppercase">Aura Feed</h2>
-            <div className="h-px flex-1 mx-6 bg-border/50" />
-          </div>
           <AnimatePresence mode="popLayout">
             {posts.map((post, idx) => (
               <motion.div
