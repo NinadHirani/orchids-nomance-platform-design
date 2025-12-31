@@ -209,7 +209,7 @@ function AuthContent() {
             transition={{ delay: 0.2 }}
           >
             <h1 className="text-5xl font-black italic tracking-tighter text-[#1a1a1a] mb-2 drop-shadow-sm">NOMANCE</h1>
-            <p className="text-[#FF4D4D] font-black tracking-tight uppercase text-[10px] tracking-[0.4em] opacity-80">Frequency Integration</p>
+            <p className="text-[#FF4D4D] font-bold tracking-tight text-sm opacity-90">Real people. Real intentions.</p>
           </motion.div>
         </div>
 
