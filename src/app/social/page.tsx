@@ -417,11 +417,11 @@ export default function SocialPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/80 text-foreground pb-20 overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground pb-20 overflow-x-hidden">
       {/* Extraordinary Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/5 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-purple-600/5 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/20 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-purple-600/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
       <main className="container mx-auto px-4 pt-12 pb-24 max-w-2xl relative z-10">
@@ -536,7 +536,7 @@ export default function SocialPage() {
 
         {/* Create Post Prompt */}
         <div className="mb-12">
-          <Card className="bg-white border-dashed border-muted-foreground/30 rounded-[2.5rem] p-6 hover:shadow-lg transition-all cursor-pointer group" onClick={() => setIsCreatingPost(true)}>
+          <Card className="bg-card/40 backdrop-blur-xl border-dashed border-muted-foreground/30 rounded-[2.5rem] p-6 hover:shadow-lg transition-all cursor-pointer group" onClick={() => setIsCreatingPost(true)}>
             <div className="flex items-center gap-4">
               <Avatar className="w-12 h-12 ring-2 ring-primary/20">
                 <AvatarImage src={user?.user_metadata?.avatar_url} />
@@ -657,7 +657,7 @@ export default function SocialPage() {
                   delay: idx * 0.05 
                 }}
               >
-              <Card className="bg-white border-border shadow-xl shadow-black/[0.03] rounded-[3rem] overflow-hidden group hover:border-primary/20 transition-all duration-500">
+              <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl shadow-black/50 rounded-[3rem] overflow-hidden group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-6 flex flex-row items-center justify-between space-y-0">
                   <div className="flex items-center gap-4">
                     <Link href={`/profile/${post.profiles?.id}`} className="relative group/avatar">
