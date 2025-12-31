@@ -32,20 +32,23 @@ export function LoadingScreen() {
           </motion.div>
         </div>
         
-        {/* Loading circle and text */}
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-            <Loader2 className="w-10 h-10 animate-spin text-primary opacity-20" />
-            <Loader2 className="w-10 h-10 animate-spin text-primary absolute inset-0 [animation-duration:1.5s]" />
+          {/* Loading circle and text */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <Loader2 className="w-10 h-10 animate-spin text-primary opacity-20" />
+              <Loader2 className="w-10 h-10 animate-spin text-primary absolute inset-0 [animation-duration:1.5s]" />
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <motion.p 
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                className="text-xs font-black text-foreground italic tracking-tighter"
+              >
+                NOMANCE
+              </motion.p>
+              <p className="text-[6px] font-black uppercase tracking-[0.3em] text-primary/60 italic">Real people. Real intentions.</p>
+            </div>
           </div>
-          <motion.p 
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-            className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]"
-          >
-            Nomance
-          </motion.p>
-        </div>
       </div>
     </div>
   );
