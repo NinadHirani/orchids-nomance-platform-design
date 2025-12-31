@@ -88,12 +88,12 @@ export default function OnboardingPage() {
         .from("profiles")
         .upsert({
           id: user.id,
-          full_name: formData.full_name,
-          birth_date: formData.birth_date,
-          gender: formData.gender,
-          intent: formData.intent,
-          bio: formData.bio,
-          values: formData.selectedValues,
+          full_name: formData.full_name || null,
+          birth_date: formData.birth_date || null,
+          gender: formData.gender || null,
+          intent: formData.intent || null,
+          bio: formData.bio || null,
+          values: formData.selectedValues || [],
           quality_score: 100,
         });
 

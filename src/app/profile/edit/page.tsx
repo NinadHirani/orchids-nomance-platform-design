@@ -34,7 +34,7 @@ export default function EditProfilePage() {
   const [profile, setProfile] = useState<any>({
     full_name: "",
     bio: "",
-    intent: "life_partnership",
+    intent: "life_partner",
     gender: "other",
     birth_date: "",
     values: [],
