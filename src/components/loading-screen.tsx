@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export function LoadingScreen() {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm">
       <div className="relative flex flex-col items-center justify-center">
         {/* Logo in the center with heartbeat animation */}
         <div className="relative z-10 mb-8">
