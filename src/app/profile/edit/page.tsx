@@ -14,9 +14,11 @@ import { toast } from "sonner";
 import { PhotoUpload } from "@/components/profile-photos";
 
 const INTENTS = [
-  { value: "life_partnership", label: "Life Partnership" },
-  { value: "dating", label: "Dating" },
+  { value: "life_partner", label: "Life Partner" },
+  { value: "long_term", label: "Long-term Dating" },
+  { value: "short_term_open", label: "Short-term / Open" },
   { value: "friendship", label: "Friendship" },
+  { value: "still_figuring_it_out", label: "Still figuring it out" },
 ];
 
 const AVAILABLE_VALUES = [
@@ -92,21 +94,37 @@ export default function EditProfilePage() {
         ? profile.photos[0] 
         : profile.avatar_url;
 
+      // Clean up the profile data before saving
+      const profileData = {
+        id: user.id,
+        full_name: profile.full_name || null,
+        bio: profile.bio || null,
+        intent: profile.intent || null,
+        gender: profile.gender || null,
+        birth_date: profile.birth_date || null,
+        values: profile.values || [],
+        photos: profile.photos || [],
+        avatar_url: avatar_url || null,
+        last_active: new Date().toISOString()
+      };
+
+      console.log("Saving profile data:", profileData);
+
       const { error } = await supabase
         .from("profiles")
-        .upsert({
-          id: user.id,
-          ...profile,
-          avatar_url,
-          last_active: new Date().toISOString()
-        });
+        .upsert(profileData, { onConflict: 'id' });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase upsert error details:", error);
+        throw error;
+      }
+
       toast.success("Profile updated successfully!");
       router.push("/profile");
     } catch (error: any) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      console.error("Detailed error updating profile:", error);
+      const errorMessage = error.message || "Failed to update profile";
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
