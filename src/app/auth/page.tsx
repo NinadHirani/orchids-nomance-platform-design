@@ -21,13 +21,19 @@ function AuthContent() {
   const [checkingSession, setCheckingSession] = useState(true);
   const router = useRouter();
   
-  // 3D Tilt Values
+  // 3D Parallax Values
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const mouseX = useSpring(x, { stiffness: 150, damping: 20 });
-  const mouseY = useSpring(y, { stiffness: 150, damping: 20 });
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [10, -10]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-10, 10]);
+  const mouseX = useSpring(x, { stiffness: 100, damping: 30 });
+  const mouseY = useSpring(y, { stiffness: 100, damping: 30 });
+  
+  // Layer translations
+  const layer1X = useTransform(mouseX, [-0.5, 0.5], [-10, 10]);
+  const layer1Y = useTransform(mouseY, [-0.5, 0.5], [-10, 10]);
+  const layer2X = useTransform(mouseX, [-0.5, 0.5], [-25, 25]);
+  const layer2Y = useTransform(mouseY, [-0.5, 0.5], [-25, 25]);
+  const layer3X = useTransform(mouseX, [-0.5, 0.5], [-40, 40]);
+  const layer3Y = useTransform(mouseY, [-0.5, 0.5], [-40, 40]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -115,6 +121,7 @@ function AuthContent() {
           <motion.div 
             initial={{ scale: 0, rotate: -10 }}
             animate={{ scale: 1, rotate: 0 }}
+            style={{ x: layer1X, y: layer1Y }}
             className="relative inline-flex items-center justify-center mb-6"
           >
             {/* Aesthetic Glow */}
@@ -134,35 +141,71 @@ function AuthContent() {
               className="w-24 h-24 object-contain relative z-10 drop-shadow-[0_0_20px_rgba(var(--primary),0.3)]"
             />
           </motion.div>
-          <h1 className="text-4xl font-black italic tracking-tighter text-foreground mb-1">NOMANCE</h1>
-          <p className="text-muted-foreground font-medium tracking-tight uppercase text-[10px] tracking-[0.3em]">Align Your Frequency</p>
+          <motion.div style={{ x: layer2X, y: layer2Y }}>
+            <h1 className="text-4xl font-black italic tracking-tighter text-foreground mb-1">NOMANCE</h1>
+            <p className="text-muted-foreground font-medium tracking-tight uppercase text-[10px] tracking-[0.3em]">Align Your Frequency</p>
+          </motion.div>
         </div>
 
         <motion.div
-          style={{
-            rotateX,
-            rotateY,
-            perspective: 1000,
-          }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           className="relative group"
+          style={{ perspective: 1000 }}
         >
-          {/* 3D Reflection Effect */}
-          <div className="absolute -inset-0.5 bg-gradient-to-tr from-primary/20 to-purple-600/20 rounded-[3rem] blur opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
-          
-          <Card className="bg-card border-border backdrop-blur-3xl rounded-[3rem] overflow-hidden shadow-2xl relative">
-            <CardHeader className="p-8 pb-0">
-              <CardTitle className="text-2xl font-black tracking-tighter italic">
-                {isSignUp ? "Create Aura" : "Welcome Back"}
-              </CardTitle>
-              <CardDescription className="font-medium">
-                {isSignUp ? "Join the intentional connection space" : "Continue your journey of depth"}
-              </CardDescription>
+          {/* 3D Background Layers */}
+          <motion.div 
+            style={{ x: layer1X, y: layer1Y }}
+            className="absolute -inset-4 bg-primary/5 blur-2xl rounded-[4rem] z-0"
+          />
+          <motion.div 
+            style={{ x: layer2X, y: layer2Y }}
+            className="absolute -inset-8 bg-purple-600/5 blur-3xl rounded-[5rem] z-0"
+          />
+
+          <Card className="bg-card/80 border-border backdrop-blur-3xl rounded-[3rem] overflow-hidden shadow-2xl relative z-10 border-white/10">
+            {/* Holographic Logo Reflection */}
+            <motion.div 
+              style={{ x: layer3X, y: layer3Y, opacity: 0.03 }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+            >
+              <img 
+                src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/logo-1767110846410.png"
+                alt=""
+                className="w-[150%] h-[150%] object-contain grayscale blur-3xl scale-150"
+              />
+            </motion.div>
+
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            
+            <CardHeader className="p-8 pb-0 relative">
+              <motion.div style={{ x: layer1X, y: layer1Y }}>
+                <CardTitle className="text-2xl font-black tracking-tighter italic">
+                  {isSignUp ? "Create Aura" : "Welcome Back"}
+                </CardTitle>
+                <CardDescription className="font-medium">
+                  {isSignUp ? "Join the intentional connection space" : "Continue your journey of depth"}
+                </CardDescription>
+              </motion.div>
+
+              {/* 3D Floating Ornament */}
+              <motion.div
+                style={{ x: layer3X, y: layer3Y }}
+                animate={{ 
+                  y: [0, -10, 0],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center opacity-20"
+              >
+                <div className="absolute inset-0 bg-primary blur-xl rounded-full" />
+                <Sparkles className="w-8 h-8 text-primary relative z-10" />
+              </motion.div>
             </CardHeader>
-            <CardContent className="p-8">
+
+            <CardContent className="p-8 relative">
               <form onSubmit={handleAuth} className="space-y-6">
-                <div className="space-y-2">
+                <motion.div style={{ x: layer1X, y: layer1Y }} className="space-y-2">
                   <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email Frequency</Label>
                   <Input
                     id="email"
@@ -173,8 +216,9 @@ function AuthContent() {
                     required
                     className="bg-background/50 border-border rounded-2xl h-14 backdrop-blur-xl font-bold focus:ring-primary/20 transition-all"
                   />
-                </div>
-                <div className="space-y-2">
+                </motion.div>
+                
+                <motion.div style={{ x: layer2X, y: layer2Y }} className="space-y-2">
                   <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Core</Label>
                   <Input
                     id="password"
@@ -185,40 +229,45 @@ function AuthContent() {
                     required
                     className="bg-background/50 border-border rounded-2xl h-14 backdrop-blur-xl font-bold focus:ring-primary/20 transition-all"
                   />
-                </div>
+                </motion.div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full h-14 rounded-2xl bg-foreground text-background font-black text-[12px] uppercase tracking-[0.2em] shadow-xl hover:shadow-primary/10 transition-all group overflow-hidden relative"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <span className="flex items-center gap-2 relative z-10">
-                      {isSignUp ? "Initialize Frequency" : "Establish Connection"}
-                      <Zap className="w-4 h-4 fill-current group-hover:scale-125 transition-transform" />
-                    </span>
-                  )}
-                  <motion.div 
-                    className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-10 transition-opacity"
-                  />
-                </Button>
+                <motion.div style={{ x: layer3X, y: layer3Y }}>
+                  <Button 
+                    type="submit" 
+                    className="w-full h-14 rounded-2xl bg-foreground text-background font-black text-[12px] uppercase tracking-[0.2em] shadow-xl hover:shadow-primary/10 transition-all group overflow-hidden relative"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <span className="flex items-center gap-2 relative z-10">
+                        {isSignUp ? "Initialize Frequency" : "Establish Connection"}
+                        <Zap className="w-4 h-4 fill-current group-hover:scale-125 transition-transform" />
+                      </span>
+                    )}
+                    <motion.div 
+                      className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-10 transition-opacity"
+                    />
+                  </Button>
+                </motion.div>
               </form>
             </CardContent>
-            <CardFooter className="p-8 pt-0 flex flex-col gap-6">
-              <div className="flex items-center gap-4 w-full">
-                <div className="h-px bg-border flex-1" />
-                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Transition</span>
-                <div className="h-px bg-border flex-1" />
-              </div>
-              
-              <button
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-2"
-              >
-                {isSignUp ? "Already have an aura? Establish connection" : "New frequency? Create your aura"}
-              </button>
+
+            <CardFooter className="p-8 pt-0 flex flex-col gap-6 relative">
+              <motion.div style={{ x: layer1X, y: layer1Y }} className="w-full space-y-6">
+                <div className="flex items-center gap-4 w-full">
+                  <div className="h-px bg-border flex-1" />
+                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Transition</span>
+                  <div className="h-px bg-border flex-1" />
+                </div>
+                
+                <button
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="w-full text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-2"
+                >
+                  {isSignUp ? "Already have an aura? Establish connection" : "New frequency? Create your aura"}
+                </button>
+              </motion.div>
             </CardFooter>
           </Card>
         </motion.div>
