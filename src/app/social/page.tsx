@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { LoadingScreen } from "@/components/loading-screen";
-import { Plus, Camera, Loader2, MoreHorizontal, X, Sparkles, Flame, Zap, ShieldAlert, Heart, SlidersHorizontal } from "lucide-react";
+import { Plus, Camera, Loader2, MoreHorizontal, X, Sparkles, Flame, Zap, ShieldAlert, Heart, SlidersHorizontal, Upload } from "lucide-react";
 import { toast } from "sonner";
-import { formatDistanceToNow, subYears } from "date-fns";
+import { formatDistanceToNow, addDays } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,6 +29,8 @@ export default function SocialPage() {
   const [newPostImage, setNewPostImage] = useState("");
   const [selectedStory, setSelectedStory] = useState<any>(null);
   const [storyIndex, setStoryIndex] = useState(0);
+  const [isUploadingStory, setIsUploadingStory] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
     try {
@@ -168,6 +170,46 @@ export default function SocialPage() {
       }
     };
 
+  const handleStoryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    try {
+      setIsUploadingStory(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Math.random()}.${fileExt}`;
+      const filePath = `stories/${fileName}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('stories')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('stories')
+        .getPublicUrl(filePath);
+
+      const { error: storyError } = await supabase
+        .from("stories")
+        .insert({
+          user_id: user.id,
+          image_url: publicUrl,
+          expires_at: addDays(new Date(), 1).toISOString()
+        });
+
+      if (storyError) throw storyError;
+
+      toast.success("Moment shared!");
+      fetchData(); // Refresh stories
+    } catch (error: any) {
+      console.error("Story upload error:", error);
+      toast.error("Failed to share moment");
+    } finally {
+      setIsUploadingStory(false);
+    }
+  };
+
   const nextStory = () => {
     if (storyIndex < selectedStory.items.length - 1) {
       setStoryIndex(storyIndex + 1);
@@ -201,18 +243,32 @@ export default function SocialPage() {
         <div className="mb-12 space-y-8">
           {/* Stories */}
           <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
+            <input 
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              ref={fileInputRef}
+              onChange={handleStoryUpload}
+            />
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => toast.info("Coming soon: Shared Moments")}
+              disabled={isUploadingStory}
+              onClick={() => fileInputRef.current?.click()}
               className="flex flex-col items-center gap-2 shrink-0 group"
             >
               <div className="w-16 h-16 rounded-3xl bg-secondary/20 border-2 border-dashed border-muted-foreground/30 flex items-center justify-center p-1 transition-all group-hover:border-primary/50 group-hover:bg-primary/5">
                 <div className="w-full h-full rounded-2xl bg-secondary/10 flex items-center justify-center">
-                    <Plus className="w-6 h-6 text-primary" />
+                    {isUploadingStory ? (
+                      <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                    ) : (
+                      <Plus className="w-6 h-6 text-primary" />
+                    )}
                   </div>
                 </div>
-                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Add Story</span>
+                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
+                  {isUploadingStory ? "Sharing..." : "Add Story"}
+                </span>
               </motion.button>
 
 
