@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use, useRef } from "react";
+import { useState, useEffect, use, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Sparkles, ShieldCheck, AlertCircle, Loader2, MapPin, Coffee, Utensils, Music, Film, X, Calendar, Star, CheckCheck, Check } from "lucide-react";
+import { Send, Sparkles, ShieldCheck, AlertCircle, Loader2, MapPin, Coffee, Utensils, Music, Film, X, Calendar, Star, CheckCheck, Check, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -36,21 +36,30 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
   const [showDatePlanner, setShowDatePlanner] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
+  const [otherUserOnline, setOtherUserOnline] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const channelRef = useRef<any>(null);
   const router = useRouter();
 
-  useEffect(() => {
+  const scrollToBottom = useCallback(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, otherUserTyping]);
+  }, []);
 
   useEffect(() => {
+    scrollToBottom();
+  }, [messages, otherUserTyping, scrollToBottom]);
+
+  useEffect(() => {
+    let mounted = true;
+
     const fetchData = async () => {
       try {
         const { data: { user: authUser } } = await supabase.auth.getUser();
         const activeUser = authUser || { id: "00000000-0000-0000-0000-000000000001", email: "guest@example.com" };
+        if (!mounted) return;
         setUser(activeUser);
 
         const { data: matchData, error: matchError } = await supabase
@@ -68,11 +77,12 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
 
         if (matchError || matchData.status !== 'accepted') {
           toast.error("You must have a mutual match to message.");
-          router.push("/discovery");
+          router.push("/matches");
           return;
         }
 
         const otherProfile = matchData.user_1 === activeUser.id ? matchData.profiles_user_2 : matchData.profiles_user_1;
+        if (!mounted) return;
         setMatchInfo({ ...matchData, otherProfile });
 
         const { data: msgData } = await supabase
@@ -81,9 +91,9 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
           .eq("match_id", matchId)
           .order("created_at", { ascending: true });
 
+        if (!mounted) return;
         setMessages(msgData || []);
 
-        // Mark messages as read
         await supabase
           .from("messages")
           .update({ read_at: new Date().toISOString() })
@@ -91,81 +101,112 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
           .neq("sender_id", activeUser.id)
           .is("read_at", null);
 
+        setupRealtimeSubscription(activeUser.id, matchData.user_1 === activeUser.id ? matchData.user_2 : matchData.user_1);
       } catch (error: any) {
         console.error("Messages fetch error:", error);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
-    fetchData();
+    const setupRealtimeSubscription = (currentUserId: string, otherUserId: string) => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
 
-    // Set up Realtime channel for messages and typing indicators
-    const channel = supabase.channel(`match:${matchId}`, {
-      config: {
-        presence: {
-          key: user?.id || 'guest',
+      const channel = supabase.channel(`chat:${matchId}`, {
+        config: {
+          presence: { key: currentUserId },
+          broadcast: { self: false },
         },
-      },
-    });
+      });
 
-    channel
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'messages', 
-        filter: `match_id=eq.${matchId}` 
-      }, async (payload) => {
-        if (payload.eventType === 'INSERT') {
-          setMessages(prev => [...prev, payload.new]);
-          if (payload.new.sender_id !== user?.id) {
-            // Mark new message as read if we are looking at it
+      channel
+        .on('postgres_changes', { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'messages', 
+          filter: `match_id=eq.${matchId}` 
+        }, async (payload) => {
+          if (!mounted) return;
+          setMessages(prev => {
+            if (prev.some(m => m.id === payload.new.id)) return prev;
+            return [...prev, payload.new];
+          });
+          
+          if (payload.new.sender_id !== currentUserId) {
             await supabase
               .from("messages")
               .update({ read_at: new Date().toISOString() })
               .eq("id", payload.new.id);
           }
-        } else if (payload.eventType === 'UPDATE') {
+        })
+        .on('postgres_changes', { 
+          event: 'UPDATE', 
+          schema: 'public', 
+          table: 'messages', 
+          filter: `match_id=eq.${matchId}` 
+        }, (payload) => {
+          if (!mounted) return;
           setMessages(prev => prev.map(m => m.id === payload.new.id ? payload.new : m));
-        }
-      })
-      .on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState();
-        const otherTyping = Object.values(state).some((presence: any) => 
-          presence.some((p: any) => p.user_id !== user?.id && p.is_typing)
-        );
-        setOtherUserTyping(otherTyping);
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          await channel.track({ user_id: user?.id, is_typing: false });
-        }
-      });
+        })
+        .on('broadcast', { event: 'typing' }, (payload) => {
+          if (!mounted) return;
+          if (payload.payload.user_id !== currentUserId) {
+            setOtherUserTyping(payload.payload.is_typing);
+          }
+        })
+        .on('presence', { event: 'sync' }, () => {
+          if (!mounted) return;
+          const state = channel.presenceState();
+          const isOnline = Object.keys(state).includes(otherUserId);
+          setOtherUserOnline(isOnline);
+        })
+        .subscribe(async (status) => {
+          if (status === 'SUBSCRIBED') {
+            await channel.track({ online_at: new Date().toISOString() });
+          }
+        });
+
+      channelRef.current = channel;
+    };
+
+    fetchData();
 
     return () => {
-      supabase.removeChannel(channel);
+      mounted = false;
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     };
-  }, [matchId, user?.id]);
+  }, [matchId, router]);
+
+  const broadcastTyping = useCallback(async (typing: boolean) => {
+    if (channelRef.current) {
+      await channelRef.current.send({
+        type: 'broadcast',
+        event: 'typing',
+        payload: { user_id: user?.id, is_typing: typing }
+      });
+    }
+  }, [user?.id]);
 
   const handleTyping = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMessage(e.target.value);
     
     if (!isTyping) {
       setIsTyping(true);
-      const channel = supabase.getChannels().find(c => c.topic === `realtime:match:${matchId}`);
-      if (channel) {
-        await channel.track({ user_id: user?.id, is_typing: true });
-      }
+      broadcastTyping(true);
     }
 
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     
-    typingTimeoutRef.current = setTimeout(async () => {
+    typingTimeoutRef.current = setTimeout(() => {
       setIsTyping(false);
-      const channel = supabase.getChannels().find(c => c.topic === `realtime:match:${matchId}`);
-      if (channel) {
-        await channel.track({ user_id: user?.id, is_typing: false });
-      }
+      broadcastTyping(false);
     }, 2000);
   };
 
@@ -176,22 +217,33 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
     const messageContent = newMessage.trim();
     setNewMessage("");
     setIsTyping(false);
+    broadcastTyping(false);
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
-    
-    const channel = supabase.getChannels().find(c => c.topic === `realtime:match:${matchId}`);
-    if (channel) {
-      await channel.track({ user_id: user?.id, is_typing: false });
-    }
 
-    const { error } = await supabase.from("messages").insert({
+    const optimisticMessage = {
+      id: `temp-${Date.now()}`,
+      match_id: matchId,
+      sender_id: user.id,
+      content: messageContent,
+      created_at: new Date().toISOString(),
+      read_at: null,
+      _optimistic: true,
+    };
+
+    setMessages(prev => [...prev, optimisticMessage]);
+
+    const { data, error } = await supabase.from("messages").insert({
       match_id: matchId,
       sender_id: user.id,
       content: messageContent
-    });
+    }).select().single();
 
     if (error) {
       toast.error("Failed to send message");
+      setMessages(prev => prev.filter(m => m.id !== optimisticMessage.id));
       setNewMessage(messageContent);
+    } else if (data) {
+      setMessages(prev => prev.map(m => m.id === optimisticMessage.id ? data : m));
     }
   };
 
@@ -225,13 +277,11 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
       
       <main className="flex-grow pt-20 flex flex-col container mx-auto px-4 max-w-5xl h-full overflow-hidden">
         <div className="flex gap-4 flex-grow h-full py-4 overflow-hidden">
-          {/* Main Chat Area */}
           <div className="flex-grow flex flex-col h-full">
-            {/* Chat Header */}
             <header className="bg-card p-3 rounded-2xl shadow-sm border border-border flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="icon" onClick={() => router.push('/messages')} className="md:hidden">
-                  <X className="w-5 h-5" />
+                  <ArrowLeft className="w-5 h-5" />
                 </Button>
                 <Avatar className="w-10 h-10 border border-primary/10">
                   <AvatarImage src={matchInfo?.otherProfile?.avatar_url || `https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop`} />
@@ -243,7 +293,8 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
                     <ShieldCheck className="w-3 h-3 text-primary fill-primary" />
                   </h2>
                   <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Active now
+                    <span className={`w-2 h-2 rounded-full ${otherUserOnline ? 'bg-green-500 animate-pulse' : 'bg-muted-foreground/50'}`} /> 
+                    {otherUserOnline ? 'Active now' : 'Offline'}
                   </p>
                 </div>
               </div>
@@ -260,7 +311,6 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
               </div>
             </header>
 
-            {/* Message Bubble Area */}
             <div className="flex-grow bg-card rounded-3xl shadow-sm border border-border overflow-hidden flex flex-col min-h-0">
               <div ref={scrollRef} className="flex-grow overflow-y-auto p-4 space-y-3">
                 {messages.length === 0 && (
@@ -305,19 +355,23 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
                         <div className="flex flex-col items-end max-w-[85%]">
                           <div className={`p-3.5 rounded-2xl text-sm font-medium ${
                             isOwn 
-                              ? "bg-primary text-primary-foreground rounded-tr-none shadow-sm" 
+                              ? `bg-primary text-primary-foreground rounded-tr-none shadow-sm ${msg._optimistic ? 'opacity-70' : ''}` 
                               : "bg-secondary/30 text-foreground rounded-tl-none border border-border"
                           }`}>
                             {msg.content}
                           </div>
                           {isOwn && (
                             <div className="mt-1 flex items-center gap-1 pr-1">
-                              {msg.read_at ? (
+                              {msg._optimistic ? (
+                                <Loader2 className="w-3 h-3 text-muted-foreground animate-spin" />
+                              ) : msg.read_at ? (
                                 <CheckCheck className="w-3 h-3 text-primary" />
                               ) : (
                                 <Check className="w-3 h-3 text-muted-foreground" />
                               )}
-                              <span className="text-[9px] text-muted-foreground">{msg.read_at ? 'Seen' : 'Sent'}</span>
+                              <span className="text-[9px] text-muted-foreground">
+                                {msg._optimistic ? 'Sending...' : msg.read_at ? 'Seen' : 'Sent'}
+                              </span>
                             </div>
                           )}
                         </div>
@@ -337,7 +391,6 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
                 )}
               </div>
 
-              {/* Input Area */}
               <div className="p-3 border-t border-border bg-secondary/5">
                 <form onSubmit={handleSendMessage} className="flex gap-2">
                   <Input 
@@ -352,13 +405,12 @@ export default function MessageDetailPage({ params }: { params: Promise<{ id: st
                 </form>
                 <div className="flex items-center gap-1 mt-2 px-2">
                   <ShieldCheck className="w-3 h-3 text-primary" />
-                  <span className="text-[10px] text-muted-foreground italic">End-to-end intentional messaging active.</span>
+                  <span className="text-[10px] text-muted-foreground italic">Real-time messaging active</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Date Planner Sidebar (Desktop) */}
           {showDatePlanner && (
             <div className="hidden lg:block w-80 shrink-0 h-full">
               <Card className="border-border bg-card h-full flex flex-col overflow-hidden">

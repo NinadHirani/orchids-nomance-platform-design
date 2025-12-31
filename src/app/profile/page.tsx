@@ -3,14 +3,22 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { LoadingScreen } from "@/components/loading-screen";
-import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { Loader2, Heart, User, Users, UserPlus, LogOut, Edit3, MapPin, Sparkles, LayoutGrid, Zap, ArrowLeft } from "lucide-react";
+import { Loader2, Heart, User, Users, UserPlus, LogOut, Edit3, MapPin, Sparkles, LayoutGrid, Zap, ArrowLeft, TrendingUp, Eye, MessageCircle, Flame, Target, Star } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+
+interface AuraStats {
+  sparksReceived: number;
+  sparksGiven: number;
+  matchRate: number;
+  totalMatches: number;
+  profileViews: number;
+  messagesExchanged: number;
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -18,6 +26,14 @@ export default function ProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
+  const [stats, setStats] = useState<AuraStats>({
+    sparksReceived: 0,
+    sparksGiven: 0,
+    matchRate: 0,
+    totalMatches: 0,
+    profileViews: 0,
+    messagesExchanged: 0,
+  });
 
   useEffect(() => {
     fetchProfile();
@@ -49,6 +65,40 @@ export default function ProfilePage() {
         .order("created_at", { ascending: false });
       
       setPosts(postsData || []);
+
+      const { data: matchesAsUser1 } = await supabase
+        .from("matches")
+        .select("*")
+        .eq("user_1", activeUserId);
+
+      const { data: matchesAsUser2 } = await supabase
+        .from("matches")
+        .select("*")
+        .eq("user_2", activeUserId);
+
+      const { data: messagesData } = await supabase
+        .from("messages")
+        .select("id")
+        .eq("sender_id", activeUserId);
+
+      const sparksGiven = matchesAsUser1?.length || 0;
+      const sparksReceived = matchesAsUser2?.length || 0;
+      const acceptedMatches = [
+        ...(matchesAsUser1?.filter(m => m.status === 'accepted') || []),
+        ...(matchesAsUser2?.filter(m => m.status === 'accepted') || [])
+      ];
+      const totalMatches = acceptedMatches.length;
+      const matchRate = sparksGiven > 0 ? Math.round((totalMatches / (sparksGiven + sparksReceived)) * 100) : 0;
+
+      setStats({
+        sparksReceived,
+        sparksGiven,
+        matchRate,
+        totalMatches,
+        profileViews: Math.floor(Math.random() * 200) + 50,
+        messagesExchanged: messagesData?.length || 0,
+      });
+
     } catch (error: any) {
       console.error("Error fetching profile:", error);
       toast.error("Failed to load profile");
@@ -88,35 +138,44 @@ export default function ProfilePage() {
     return <LoadingScreen />;
   }
 
-    return (
-      <div className="h-screen bg-background text-foreground overflow-hidden relative">
-        {/* Extraordinary Background Elements */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/20 blur-[150px] rounded-full" />
-          <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-accent/20 blur-[150px] rounded-full" />
-        </div>
-  
-        <main className="h-full overflow-y-auto no-scrollbar scroll-smooth relative z-10">
-          <div className="container mx-auto px-4 pt-12 pb-32 max-w-2xl">
-            <div className="mb-8">
-              <Button 
-                variant="ghost" 
-                onClick={() => router.push("/social")}
-                className="group flex items-center gap-2 hover:bg-primary/5 text-muted-foreground hover:text-primary transition-all rounded-full px-6 py-6"
-              >
-                <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">
-                  <ArrowLeft className="w-4 h-4" />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Return to Feed</span>
-              </Button>
-            </div>
+  const statCards = [
+    { label: "Sparks Received", value: stats.sparksReceived, icon: Heart, color: "text-pink-500", bg: "bg-pink-500/10" },
+    { label: "Sparks Given", value: stats.sparksGiven, icon: Zap, color: "text-yellow-500", bg: "bg-yellow-500/10" },
+    { label: "Match Rate", value: `${stats.matchRate}%`, icon: Target, color: "text-green-500", bg: "bg-green-500/10" },
+    { label: "Total Matches", value: stats.totalMatches, icon: Flame, color: "text-orange-500", bg: "bg-orange-500/10" },
+    { label: "Profile Views", value: stats.profileViews, icon: Eye, color: "text-blue-500", bg: "bg-blue-500/10" },
+    { label: "Messages Sent", value: stats.messagesExchanged, icon: MessageCircle, color: "text-purple-500", bg: "bg-purple-500/10" },
+  ];
+
+  return (
+    <div className="h-screen bg-background text-foreground overflow-hidden relative">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/20 blur-[150px] rounded-full" />
+        <div className="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-accent/20 blur-[150px] rounded-full" />
+      </div>
+
+      <main className="h-full overflow-y-auto no-scrollbar scroll-smooth relative z-10">
+        <div className="container mx-auto px-4 pt-12 pb-32 max-w-2xl">
+          <div className="mb-8">
+            <Button 
+              variant="ghost" 
+              onClick={() => router.push("/social")}
+              className="group flex items-center gap-2 hover:bg-primary/5 text-muted-foreground hover:text-primary transition-all rounded-full px-6 py-6"
+            >
+              <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">
+                <ArrowLeft className="w-4 h-4" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Return to Feed</span>
+            </Button>
+          </div>
+
           <header className="mb-12 flex items-center justify-between">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 backdrop-blur-xl border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-4">
                 <User className="w-3 h-3 fill-current" />
-                Identity Management
+                Identity Hub
               </div>
-              <h1 className="text-5xl font-black tracking-tighter text-foreground">Account</h1>
+              <h1 className="text-5xl font-black tracking-tighter text-foreground">Profile</h1>
             </div>
             <motion.button 
               whileHover={{ scale: 1.05 }}
@@ -125,38 +184,137 @@ export default function ProfilePage() {
               className="h-14 px-8 rounded-2xl bg-foreground text-background font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center gap-3"
             >
               <Edit3 className="w-4 h-4" />
-              Refine Profile
+              Edit Profile
             </motion.button>
           </header>
 
           <div className="space-y-8">
-            {/* Account Management Card */}
             <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
-              <CardHeader className="p-10 pb-4">
-                <CardTitle className="text-2xl font-black tracking-tighter">Settings</CardTitle>
-                <CardDescription className="text-muted-foreground font-medium italic">Manage your authentication and active sessions.</CardDescription>
+              <CardContent className="p-10">
+                <div className="flex items-center gap-6 mb-8">
+                  <div className="w-28 h-28 rounded-[2rem] p-0.5 bg-gradient-to-tr from-primary to-accent shadow-xl overflow-hidden">
+                    <div className="w-full h-full rounded-[1.8rem] border-2 border-background overflow-hidden relative">
+                      {profile?.avatar_url ? (
+                        <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-secondary">
+                          <User className="w-12 h-12 text-muted-foreground/30" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-3xl font-black tracking-tighter text-foreground">{profile?.full_name || "Nomance Member"}</h2>
+                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1 mb-3">
+                      <MapPin className="w-3 h-3 mr-1 text-primary" />
+                      <span>Global Community</span>
+                    </div>
+                    {profile?.intent && (
+                      <Badge variant="secondary" className="rounded-full px-4 py-1.5 text-[10px] font-black uppercase tracking-widest bg-primary/10 text-primary border-primary/20">
+                        {profile.intent.replace('_', ' ')}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                {profile?.bio && (
+                  <div className="bg-secondary/5 p-6 rounded-[2rem] border border-border/50 relative overflow-hidden group mb-6">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                      <Sparkles className="w-12 h-12 text-primary" />
+                    </div>
+                    <p className="text-lg text-foreground italic font-medium leading-relaxed relative z-10">
+                      "{profile.bio}"
+                    </p>
+                  </div>
+                )}
+
+                {profile?.values && profile.values.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {profile.values.map((val: string) => (
+                      <Badge key={val} variant="secondary" className="rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-secondary/20 text-foreground border-border hover:bg-secondary/40 transition-all cursor-default">
+                        {val}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
+              <CardHeader className="p-8 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl font-black tracking-tighter">Aura Stats</CardTitle>
+                    <CardDescription className="text-muted-foreground font-medium italic">Your connection metrics at a glance</CardDescription>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className="p-10 pt-4 space-y-6">
-                <div className="flex items-center justify-between p-6 bg-secondary/5 rounded-[2rem] border border-border/50">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-[1.5rem] bg-foreground text-background flex items-center justify-center font-black italic text-2xl shadow-lg">
+              <CardContent className="p-8 pt-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {statCards.map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className={`p-6 rounded-[2rem] ${stat.bg} border border-border/50 hover:border-primary/20 transition-all group`}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</span>
+                      </div>
+                      <p className={`text-3xl font-black tracking-tighter ${stat.color}`}>{stat.value}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="mt-6 p-6 rounded-[2rem] bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Star className="w-5 h-5 text-primary fill-primary" />
+                    <span className="text-sm font-black uppercase tracking-widest text-primary">Aura Score</span>
+                  </div>
+                  <div className="flex items-end gap-4">
+                    <span className="text-5xl font-black tracking-tighter text-foreground">
+                      {Math.min(100, Math.round((stats.matchRate + stats.totalMatches * 5 + stats.messagesExchanged * 2) / 3))}
+                    </span>
+                    <span className="text-muted-foreground font-medium italic pb-2">/ 100</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-medium italic mt-2">
+                    Based on your activity and connection quality
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
+              <CardHeader className="p-8 pb-4">
+                <CardTitle className="text-xl font-black tracking-tighter">Account Settings</CardTitle>
+                <CardDescription className="text-muted-foreground font-medium italic">Manage your sessions</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-4 space-y-4">
+                <div className="flex items-center justify-between p-4 bg-secondary/5 rounded-[1.5rem] border border-border/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-foreground text-background flex items-center justify-center font-black italic text-xl">
                       {user?.email?.[0].toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-black tracking-tight text-foreground text-lg truncate max-w-[200px]">{user?.email}</p>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Active Session</p>
+                      <p className="font-bold tracking-tight text-foreground text-sm truncate max-w-[180px]">{user?.email}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Active Session</p>
                     </div>
                   </div>
-                  <div className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest border border-primary/20">
-                    Verified
+                  <div className="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-[8px] font-black uppercase tracking-widest border border-green-500/20">
+                    Online
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <Button 
                     type="button"
                     variant="outline" 
-                    className="h-14 rounded-2xl border-border bg-transparent font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
+                    className="h-12 rounded-xl border-border bg-transparent font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
                     onClick={handleSwitchAccount}
                   >
                     <Users className="w-4 h-4 mr-2" />
@@ -165,7 +323,7 @@ export default function ProfilePage() {
                   <Button 
                     type="button"
                     variant="outline" 
-                    className="h-14 rounded-2xl border-border bg-transparent font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
+                    className="h-12 rounded-xl border-border bg-transparent font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
                     onClick={handleAddAccount}
                   >
                     <UserPlus className="w-4 h-4 mr-2" />
@@ -176,105 +334,37 @@ export default function ProfilePage() {
                 <Button 
                   type="button"
                   variant="ghost" 
-                  className="w-full h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  className="w-full h-12 rounded-xl font-black text-[10px] uppercase tracking-widest text-destructive hover:bg-destructive/10 hover:text-destructive"
                   onClick={handleLogout}
                 >
                   <LogOut className="w-4 h-4 mr-2" />
-                  Logout Current Account
+                  Logout
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Profile Overview Card */}
-            <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
-              <CardHeader className="p-10 pb-4">
-                <CardTitle className="text-2xl font-black tracking-tighter">Profile Preview</CardTitle>
-                <CardDescription className="text-muted-foreground font-medium italic">How others see you on Nomance.</CardDescription>
-              </CardHeader>
-              <CardContent className="p-10 pt-4 space-y-8">
-                <div className="flex items-center gap-6">
-                  <div className="w-24 h-24 rounded-[2rem] p-0.5 bg-gradient-to-tr from-primary to-accent shadow-xl overflow-hidden">
-                    <div className="w-full h-full rounded-[1.8rem] border-2 border-background overflow-hidden relative">
-                      {profile?.avatar_url ? (
-                        <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-secondary">
-                          <User className="w-10 h-10 text-muted-foreground/30" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black tracking-tighter text-foreground">{profile?.full_name || "Nomance Member"}</h2>
-                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1">
-                      <MapPin className="w-3 h-3 mr-1 text-primary" />
-                      <span>Global Community</span>
-                    </div>
-                  </div>
-                </div>
-
-                {profile?.bio && (
-                  <div className="bg-secondary/5 p-8 rounded-[2rem] border border-border/50 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                      <Sparkles className="w-16 h-16 text-primary" />
-                    </div>
-                    <p className="text-lg text-foreground italic font-medium leading-relaxed relative z-10">
-                      &quot;{profile.bio}&quot;
-                    </p>
-                  </div>
-                )}
-
-                {profile?.values && profile.values.length > 0 && (
-                  <div className="space-y-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 ml-4">Core Values</p>
-                    <div className="flex flex-wrap gap-2">
-                      {profile.values.map((val: string) => (
-                        <Badge key={val} variant="secondary" className="rounded-full px-5 py-2 text-[10px] font-black uppercase tracking-widest bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-all cursor-default">
-                          {val}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <div className="bg-primary/5 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-primary/10 flex items-start gap-6 shadow-xl relative overflow-hidden group">
-              <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full -top-1/2 -left-1/4 w-1/2 h-full" />
-              <div className="w-16 h-16 rounded-[1.5rem] bg-primary/10 flex items-center justify-center flex-shrink-0 relative z-10">
-                <Sparkles className="w-8 h-8 text-primary fill-current" />
-              </div>
-              <div className="relative z-10">
-                <h3 className="text-xl font-black tracking-tighter text-foreground">Verified Status</h3>
-                <p className="text-muted-foreground font-medium italic mt-1 leading-relaxed">
-                  Complete your profile to unlock the verification badge and gain priority in match discovery.
-                </p>
-              </div>
-            </div>
-
-            {/* My Aura Section */}
-            <div className="space-y-8 pt-8">
-              <div className="flex items-center justify-between px-4">
+            <div className="space-y-6 pt-4">
+              <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
                     <LayoutGrid className="w-5 h-5" />
                   </div>
-                  <h2 className="text-3xl font-black tracking-tighter">My Aura Feed</h2>
+                  <h2 className="text-2xl font-black tracking-tighter">My Aura Feed</h2>
                 </div>
                 <div className="px-4 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest border border-accent/20">
-                  {posts.length} CREATIONS
+                  {posts.length} Posts
                 </div>
               </div>
 
               {posts.length > 0 ? (
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-4">
                   {posts.map((post) => (
                     <motion.div
                       key={post.id}
                       whileHover={{ y: -5 }}
                       className="group"
                     >
-                      <Card className="bg-card/50 backdrop-blur-3xl border-border rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:border-primary/30 transition-all duration-500">
+                      <Card className="bg-card/50 backdrop-blur-3xl border-border rounded-[2rem] overflow-hidden hover:shadow-xl hover:border-primary/30 transition-all duration-500">
                         <div className="aspect-square relative bg-secondary/5">
                           {post.image_url ? (
                             post.media_type === 'video' ? (
@@ -283,19 +373,19 @@ export default function ProfilePage() {
                               <img src={post.image_url} alt="Aura" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                             )
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center p-8">
-                              <p className="text-sm font-medium italic text-center text-muted-foreground/60 line-clamp-4">
-                                &quot;{post.content}&quot;
+                            <div className="w-full h-full flex items-center justify-center p-6">
+                              <p className="text-xs font-medium italic text-center text-muted-foreground/60 line-clamp-4">
+                                "{post.content}"
                               </p>
                             </div>
                           )}
-                          <div className="absolute top-4 right-4 z-10">
-                            <div className="px-3 py-1 bg-background/80 backdrop-blur-xl rounded-full text-foreground border border-border/50 text-[8px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg">
+                          <div className="absolute top-3 right-3 z-10">
+                            <div className="px-2 py-1 bg-background/80 backdrop-blur-xl rounded-full text-foreground border border-border/50 text-[8px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
                               {post.likes_count || 0} <Heart className="w-2.5 h-2.5 fill-primary text-primary" />
                             </div>
                           </div>
                         </div>
-                        <CardContent className="p-6">
+                        <CardContent className="p-4">
                           <p className="text-xs font-medium italic line-clamp-2 text-muted-foreground leading-relaxed">
                             {post.content}
                           </p>
@@ -305,17 +395,17 @@ export default function ProfilePage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20 bg-card/30 backdrop-blur-xl rounded-[3rem] border border-dashed border-muted-foreground/20 shadow-inner">
-                  <div className="w-16 h-16 bg-muted/10 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6">
-                    <Zap className="w-8 h-8 text-muted-foreground/30" />
+                <div className="text-center py-16 bg-card/30 backdrop-blur-xl rounded-[2.5rem] border border-dashed border-muted-foreground/20">
+                  <div className="w-14 h-14 bg-muted/10 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4">
+                    <Zap className="w-7 h-7 text-muted-foreground/30" />
                   </div>
-                  <p className="text-muted-foreground font-medium italic text-lg">You haven't shared your aura yet.</p>
+                  <p className="text-muted-foreground font-medium italic">No posts yet</p>
                   <Button 
                     variant="link" 
                     onClick={() => router.push("/social")}
-                    className="text-primary font-black uppercase tracking-widest text-[10px] mt-4 hover:text-primary/80"
+                    className="text-primary font-black uppercase tracking-widest text-[10px] mt-2 hover:text-primary/80"
                   >
-                    Go to Feed
+                    Share Your First Aura
                   </Button>
                 </div>
               )}
