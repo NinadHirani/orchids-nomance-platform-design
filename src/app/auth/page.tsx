@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Loader2, Zap, ShieldCheck, Sparkles, Box } from "lucide-react";
+import { Loader2, Zap, ShieldCheck, Sparkles, Box, Heart } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -129,6 +129,24 @@ function AuthContent() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(circle_at_center,oklch(0.18_0.06_25)_0%,oklch(0.1_0.02_25)_100%)] relative overflow-hidden px-4 py-12 perspective-[1500px]">
       <FallingHearts />
+      
+      {/* Big Rotating Hearts in Corners */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute -top-10 -left-10 text-white/10 z-0 pointer-events-none"
+      >
+        <Heart size={300} fill="currentColor" stroke="none" />
+      </motion.div>
+
+      <motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute -bottom-20 -right-20 text-white/10 z-0 pointer-events-none"
+      >
+        <Heart size={400} fill="currentColor" stroke="none" />
+      </motion.div>
+
       {/* 3D Perspective Grid Floor */}
       <div 
         className="absolute inset-0 z-0 opacity-20 pointer-events-none"
