@@ -123,9 +123,9 @@ export default function SearchPage() {
         <div className="container mx-auto px-4 pt-12 pb-32 relative z-10 max-w-2xl">
           <div className="space-y-8">
             <div className="flex flex-col gap-6">
-              <div className="flex items-center justify-between">
-                <h1 className="text-4xl font-black italic tracking-tighter">DISCOVER</h1>
-                <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-4xl font-black italic tracking-tighter text-primary">DISCOVER</h1>
+                  <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
                   <Zap className="w-4 h-4 text-primary fill-current" />
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary">High Intent</span>
                 </div>
@@ -150,7 +150,7 @@ export default function SearchPage() {
                   </SheetTrigger>
                   <SheetContent side="right" className="bg-background/95 backdrop-blur-2xl border-border w-full sm:max-w-md rounded-l-[3rem]">
                     <SheetHeader className="pb-8">
-                      <SheetTitle className="text-3xl font-black italic tracking-tighter">REFINE SEARCH</SheetTitle>
+                      <SheetTitle className="text-3xl font-black italic tracking-tighter text-primary">REFINE SEARCH</SheetTitle>
                     </SheetHeader>
                     
                     <div className="space-y-12 py-6">
@@ -237,13 +237,13 @@ export default function SearchPage() {
                             <AvatarFallback className="bg-secondary rounded-2xl font-black">{profile.full_name?.[0]}</AvatarFallback>
                           </Avatar>
                           
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <h3 className="text-lg font-black italic tracking-tight truncate">{profile.full_name}</h3>
-                              <span className="text-xs font-bold text-primary">
-                                {profile.birth_date ? differenceInYears(new Date(), new Date(profile.birth_date)) : '??'}
-                              </span>
-                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between mb-1">
+                                <h3 className="text-lg font-black italic tracking-tight truncate text-primary">{profile.full_name}</h3>
+                                <span className="text-xs font-bold text-primary">
+                                  {profile.birth_date ? differenceInYears(new Date(), new Date(profile.birth_date)) : '??'}
+                                </span>
+                              </div>
                             
                             <div className="flex items-center gap-3">
                               <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -277,10 +277,10 @@ export default function SearchPage() {
                   <div className="w-20 h-20 bg-accent/50 rounded-full flex items-center justify-center mx-auto">
                     <Search className="w-10 h-10 text-muted-foreground opacity-20" />
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-black italic tracking-tighter">No Frequencies Found</h3>
-                    <p className="text-sm text-muted-foreground font-medium">Try broadening your search or adjusting your vibe filters.</p>
-                  </div>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-black italic tracking-tighter text-primary">No Frequencies Found</h3>
+                      <p className="text-sm text-muted-foreground font-medium">Try broadening your search or adjusting your vibe filters.</p>
+                    </div>
                 </div>
               )}
             </div>

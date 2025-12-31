@@ -726,7 +726,7 @@ export default function SocialPage() {
               </SheetTrigger>
               <SheetContent side="bottom" className="rounded-t-[2.5rem] bg-background/95 backdrop-blur-2xl border-t border-border max-h-[80vh] overflow-y-auto">
                 <SheetHeader className="pb-6">
-                  <SheetTitle className="text-2xl font-black tracking-tighter text-center">Discovery Filters</SheetTitle>
+                  <SheetTitle className="text-2xl font-black tracking-tighter text-center text-primary">Discovery Filters</SheetTitle>
                 </SheetHeader>
                 <div className="space-y-8 pb-8">
                   <div className="space-y-4">
@@ -934,7 +934,7 @@ export default function SocialPage() {
         <Dialog open={isCreatingPost} onOpenChange={setIsCreatingPost}>
           <DialogContent className="sm:max-w-lg rounded-[2.5rem] bg-background/95 backdrop-blur-2xl border-border p-0 overflow-hidden">
             <DialogHeader className="p-8 pb-4">
-              <DialogTitle className="text-2xl font-black tracking-tighter">Share Your Aura</DialogTitle>
+              <DialogTitle className="text-2xl font-black tracking-tighter text-primary">Share Your Aura</DialogTitle>
             </DialogHeader>
             <div className="p-8 pt-4 space-y-6">
               <div className="space-y-4">
@@ -1146,7 +1146,7 @@ export default function SocialPage() {
       <Dialog open={isReporting} onOpenChange={setIsReporting}>
         <DialogContent className="sm:max-w-md rounded-[2.5rem] bg-background/95 backdrop-blur-2xl border-border p-0 overflow-hidden">
           <DialogHeader className="p-8 pb-4">
-            <DialogTitle className="text-2xl font-black tracking-tighter flex items-center gap-3">
+            <DialogTitle className="text-2xl font-black tracking-tighter flex items-center gap-3 text-primary">
               <ShieldAlert className="w-6 h-6 text-orange-500" />
               Report Aura
             </DialogTitle>

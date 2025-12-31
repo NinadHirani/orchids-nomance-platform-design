@@ -175,18 +175,19 @@ export default function ProfilePage() {
                 <User className="w-3 h-3 fill-current" />
                 Identity Hub
               </div>
-              <h1 className="text-5xl font-black tracking-tighter text-foreground">Profile</h1>
-            </div>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => router.push("/profile/edit")}
-              className="h-14 px-8 rounded-2xl bg-foreground text-background font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center gap-3"
-            >
-              <Edit3 className="w-4 h-4" />
-              Edit Profile
-            </motion.button>
-          </header>
+                <h1 className="text-5xl font-black tracking-tighter text-primary">Profile</h1>
+              </div>
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => router.push("/profile/edit")}
+                className="h-14 px-8 rounded-2xl bg-foreground text-background font-black text-[10px] uppercase tracking-widest shadow-xl flex items-center gap-3"
+              >
+                <Edit3 className="w-4 h-4" />
+                Edit Profile
+              </motion.button>
+            </header>
+
 
           <div className="space-y-8">
             <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
@@ -202,10 +203,10 @@ export default function ProfilePage() {
                         </div>
                       )}
                     </div>
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-3xl font-black tracking-tighter text-foreground">{profile?.full_name || "Nomance Member"}</h2>
-                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1 mb-3">
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-3xl font-black tracking-tighter text-primary">{profile?.full_name || "Nomance Member"}</h2>
+                      <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1 mb-3">
                       <MapPin className="w-3 h-3 mr-1 text-primary" />
                       <span>Global Community</span>
                     </div>
@@ -243,15 +244,15 @@ export default function ProfilePage() {
             <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
               <CardHeader className="p-8 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                    <TrendingUp className="w-5 h-5" />
+                    <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                      <TrendingUp className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl font-black tracking-tighter text-primary">Aura Stats</CardTitle>
+                      <CardDescription className="text-muted-foreground font-medium italic">Your connection metrics at a glance</CardDescription>
+                    </div>
                   </div>
-                  <div>
-                    <CardTitle className="text-2xl font-black tracking-tighter">Aura Stats</CardTitle>
-                    <CardDescription className="text-muted-foreground font-medium italic">Your connection metrics at a glance</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
+                </CardHeader>
               <CardContent className="p-8 pt-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {statCards.map((stat, index) => (
@@ -290,10 +291,10 @@ export default function ProfilePage() {
             </Card>
 
             <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
-              <CardHeader className="p-8 pb-4">
-                <CardTitle className="text-xl font-black tracking-tighter">Account Settings</CardTitle>
-                <CardDescription className="text-muted-foreground font-medium italic">Manage your sessions</CardDescription>
-              </CardHeader>
+                <CardHeader className="p-8 pb-4">
+                  <CardTitle className="text-xl font-black tracking-tighter text-primary">Account Settings</CardTitle>
+                  <CardDescription className="text-muted-foreground font-medium italic">Manage your sessions</CardDescription>
+                </CardHeader>
               <CardContent className="p-8 pt-4 space-y-4">
                 <div className="flex items-center justify-between p-4 bg-secondary/5 rounded-[1.5rem] border border-border/50">
                   <div className="flex items-center gap-3">
@@ -349,7 +350,7 @@ export default function ProfilePage() {
                   <div className="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
                     <LayoutGrid className="w-5 h-5" />
                   </div>
-                  <h2 className="text-2xl font-black tracking-tighter">My Aura Feed</h2>
+                  <h2 className="text-2xl font-black tracking-tighter text-primary">My Aura Feed</h2>
                 </div>
                 <div className="px-4 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest border border-accent/20">
                   {posts.length} Posts

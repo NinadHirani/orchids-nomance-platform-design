@@ -222,14 +222,14 @@ export default function MatchesPage() {
       <main className="h-full overflow-y-auto no-scrollbar scroll-smooth relative z-10">
         <div className="container mx-auto px-4 pt-12 pb-32 max-w-4xl relative z-10">
           <header className="mb-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <h1 className="text-4xl font-black tracking-tighter text-foreground italic flex items-center gap-3">
-                  Connections <Sparkles className="w-8 h-8 text-primary fill-current" />
-                </h1>
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <h1 className="text-4xl font-black tracking-tighter text-primary italic flex items-center gap-3">
+                    Connections <Sparkles className="w-8 h-8 text-primary fill-current" />
+                  </h1>
+                </motion.div>
 
           </header>
 
@@ -268,13 +268,13 @@ export default function MatchesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       className="text-center py-20 bg-card/50 rounded-[3rem] border border-dashed border-border backdrop-blur-md"
                     >
-                      <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Calendar className="w-8 h-8 text-primary" />
-                      </div>
-                      <h2 className="text-2xl font-black italic tracking-tighter mb-3">
-                        {profiles.length === 0 ? "No matches in this mood" : "Limit Reached"}
-                      </h2>
-                      <p className="text-muted-foreground max-w-xs mx-auto mb-8 font-medium">
+                        <div className="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <Calendar className="w-8 h-8 text-primary" />
+                        </div>
+                        <h2 className="text-2xl font-black italic tracking-tighter mb-3 text-primary">
+                          {profiles.length === 0 ? "No matches in this mood" : "Limit Reached"}
+                        </h2>
+                        <p className="text-muted-foreground max-w-xs mx-auto mb-8 font-medium">
                         {profiles.length === 0 
                           ? "Try a different mood or check back later when more people are online."
                           : "Taking time to reflect on matches leads to better outcomes. Check back tomorrow for your next batch."}
@@ -313,7 +313,7 @@ export default function MatchesPage() {
                           
                           <CardHeader className="p-8 pb-4 text-center">
                             <div className="flex flex-col items-center">
-                              <CardTitle className="text-3xl font-black tracking-tighter text-foreground">
+                              <CardTitle className="text-3xl font-black tracking-tighter text-primary">
                                 {profiles[currentIndex].full_name}, {profiles[currentIndex].birth_date ? new Date().getFullYear() - new Date(profiles[currentIndex].birth_date).getFullYear() : '?'}
                               </CardTitle>
                               <div className="flex items-center gap-2 mt-2">
@@ -473,19 +473,19 @@ export default function MatchesPage() {
                 )}
               </div>
               
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-black text-foreground italic tracking-tighter truncate">{profile.full_name}</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none text-[8px] font-black uppercase tracking-widest px-2 py-0.5">
-                    {profile.intent?.replace(/_/g, ' ')}
-                  </Badge>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-black text-primary italic tracking-tighter truncate">{profile.full_name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="secondary" className="bg-primary/5 text-primary border-none text-[8px] font-black uppercase tracking-widest px-2 py-0.5">
+                      {profile.intent?.replace(/_/g, ' ')}
+                    </Badge>
+                  </div>
+                  {!isMutual && (
+                    <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-2 flex items-center gap-1">
+                      <Zap className="w-2 h-2 fill-current text-primary" /> Interest Sent
+                    </p>
+                  )}
                 </div>
-                {!isMutual && (
-                  <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-2 flex items-center gap-1">
-                    <Zap className="w-2 h-2 fill-current text-primary" /> Interest Sent
-                  </p>
-                )}
-              </div>
             </CardContent>
           </Card>
         </Link>
@@ -504,7 +504,7 @@ function EmptyState({ icon, title, description }: { icon: React.ReactNode, title
       <div className="w-24 h-24 bg-background/50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-xl">
         {icon}
       </div>
-      <h2 className="text-2xl font-black italic tracking-tighter mb-4 text-foreground">{title}</h2>
+      <h2 className="text-2xl font-black italic tracking-tighter mb-4 text-primary">{title}</h2>
       <p className="text-muted-foreground max-w-xs mx-auto font-medium text-sm leading-relaxed">
         {description}
       </p>

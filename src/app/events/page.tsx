@@ -150,12 +150,12 @@ export default function EventsPage() {
       <main className="h-full overflow-y-auto no-scrollbar scroll-smooth relative z-10">
         <div className="container mx-auto px-4 pt-12 pb-32 max-w-6xl">
         <header className="mb-10 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 text-primary text-sm font-semibold mb-4">
-            <Users className="w-4 h-4" />
-            Micro-Communities
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground mb-3">Events & Communities</h1>
-          <p className="text-muted-foreground max-w-lg mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 text-primary text-sm font-semibold mb-4">
+              <Users className="w-4 h-4" />
+              Micro-Communities
+            </div>
+            <h1 className="text-4xl font-black tracking-tighter text-primary mb-3">Events & Communities</h1>
+            <p className="text-muted-foreground max-w-lg mx-auto">
             Move beyond profiles. Meet like-minded singles at curated events and interest-based rooms.
           </p>
         </header>
@@ -189,34 +189,34 @@ export default function EventsPage() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Events Tab */}
-          <TabsContent value="events" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold text-foreground">Upcoming Meetups</h2>
-              <Button variant="outline" className="rounded-full border-primary text-primary hover:bg-primary/10">
-                <Plus className="w-4 h-4 mr-2" />
-                Host Event
-              </Button>
-            </div>
+            {/* Events Tab */}
+            <TabsContent value="events" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-black tracking-tighter text-primary">Upcoming Meetups</h2>
+                <Button variant="outline" className="rounded-full border-primary text-primary hover:bg-primary/10">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Host Event
+                </Button>
+              </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {filteredEvents.filter(e => e.event_type === 'meetup').map((event) => (
-                <Card key={event.id} className="border-border bg-card overflow-hidden hover:shadow-lg transition-all">
-                  <CardHeader className="pb-3">
-                      <div className="flex justify-between items-start">
-                        {EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES] && (
-                          <Badge className={`${EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES].bg} ${EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES].text} border-none`}>
-                            {EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES].label}
-                          </Badge>
-                        )}
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Users className="w-3 h-3" />
-                        {event.current_participants}/{event.max_participants}
+              <div className="grid md:grid-cols-2 gap-6">
+                {filteredEvents.filter(e => e.event_type === 'meetup').map((event) => (
+                  <Card key={event.id} className="border-border bg-card overflow-hidden hover:shadow-lg transition-all">
+                    <CardHeader className="pb-3">
+                        <div className="flex justify-between items-start">
+                          {EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES] && (
+                            <Badge className={`${EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES].bg} ${EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES].text} border-none`}>
+                              {EVENT_TYPE_STYLES[event.event_type as keyof typeof EVENT_TYPE_STYLES].label}
+                            </Badge>
+                          )}
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Users className="w-3 h-3" />
+                          {event.current_participants}/{event.max_participants}
+                        </div>
                       </div>
-                    </div>
-                    <CardTitle className="text-xl text-foreground mt-2">{event.title}</CardTitle>
-                    <CardDescription className="text-muted-foreground">{event.description}</CardDescription>
-                  </CardHeader>
+                      <CardTitle className="text-xl font-black tracking-tighter text-primary mt-2">{event.title}</CardTitle>
+                      <CardDescription className="text-muted-foreground">{event.description}</CardDescription>
+                    </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
@@ -256,35 +256,35 @@ export default function EventsPage() {
             </div>
           </TabsContent>
 
-          {/* Speed Dating Tab */}
-          <TabsContent value="speed" className="space-y-6">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Video className="w-8 h-8 text-purple-600" />
+            {/* Speed Dating Tab */}
+            <TabsContent value="speed" className="space-y-6">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Video className="w-8 h-8 text-purple-600" />
+                </div>
+                <h2 className="text-2xl font-black tracking-tighter text-primary mb-2">Virtual Speed Dating</h2>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  5-minute video rounds with verified members. Efficient, intentional, and no awkward goodbyes.
+                </p>
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">Virtual Speed Dating</h2>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                5-minute video rounds with verified members. Efficient, intentional, and no awkward goodbyes.
-              </p>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {filteredEvents.filter(e => e.event_type === 'speed_dating').map((event) => (
-                <Card key={event.id} className="border-border bg-card overflow-hidden hover:shadow-lg transition-all border-2 border-purple-200">
-                  <CardHeader className="bg-purple-500/5">
-                    <div className="flex justify-between items-start">
-                      <Badge className="bg-purple-500/10 text-purple-600 border-none">
-                        <Zap className="w-3 h-3 mr-1" />
-                        Speed Dating
-                      </Badge>
-                      <div className="flex items-center gap-1 text-xs text-purple-600 font-bold">
-                        <Clock className="w-3 h-3" />
-                        5 min rounds
+              <div className="grid md:grid-cols-2 gap-6">
+                {filteredEvents.filter(e => e.event_type === 'speed_dating').map((event) => (
+                  <Card key={event.id} className="border-border bg-card overflow-hidden hover:shadow-lg transition-all border-2 border-purple-200">
+                    <CardHeader className="bg-purple-500/5">
+                      <div className="flex justify-between items-start">
+                        <Badge className="bg-purple-500/10 text-purple-600 border-none">
+                          <Zap className="w-3 h-3 mr-1" />
+                          Speed Dating
+                        </Badge>
+                        <div className="flex items-center gap-1 text-xs text-purple-600 font-bold">
+                          <Clock className="w-3 h-3" />
+                          5 min rounds
+                        </div>
                       </div>
-                    </div>
-                    <CardTitle className="text-xl text-foreground mt-2">{event.title}</CardTitle>
-                    <CardDescription className="text-muted-foreground">{event.description}</CardDescription>
-                  </CardHeader>
+                      <CardTitle className="text-xl font-black tracking-tighter text-primary mt-2">{event.title}</CardTitle>
+                      <CardDescription className="text-muted-foreground">{event.description}</CardDescription>
+                    </CardHeader>
                   <CardContent className="space-y-4 pt-4">
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
@@ -332,85 +332,85 @@ export default function EventsPage() {
             </Card>
           </TabsContent>
 
-          {/* Interest Rooms Tab */}
-          <TabsContent value="rooms" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold text-foreground">Interest-Based Rooms</h2>
-              <Button variant="outline" className="rounded-full border-primary text-primary hover:bg-primary/10">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Room
-              </Button>
-            </div>
+            {/* Interest Rooms Tab */}
+            <TabsContent value="rooms" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-black tracking-tighter text-primary">Interest-Based Rooms</h2>
+                <Button variant="outline" className="rounded-full border-primary text-primary hover:bg-primary/10">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Room
+                </Button>
+              </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {INTEREST_ROOMS.map((room) => (
-                <Card 
-                  key={room.id} 
-                  className={`border-border bg-card cursor-pointer hover:shadow-lg transition-all ${joinedRooms.includes(room.id) ? "ring-2 ring-primary" : ""}`}
-                  onClick={() => handleJoinRoom(room.id)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
-                        <room.icon className="w-6 h-6 text-primary" />
-                      </div>
-                      <div className="flex-grow">
-                        <h3 className="font-bold text-foreground">{room.name}</h3>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Users className="w-3 h-3" />
-                          {room.members} members
-                          {room.active && (
-                            <span className="flex items-center gap-1 text-green-600">
-                              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                              Active
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <ChevronRight className={`w-5 h-5 ${joinedRooms.includes(room.id) ? "text-primary" : "text-muted-foreground"}`} />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Discussion Events */}
-            <div className="mt-8">
-              <h3 className="text-lg font-bold text-foreground mb-4">Upcoming Discussions</h3>
-              <div className="space-y-4">
-                {filteredEvents.filter(e => e.event_type === 'interest_room').map((event) => (
-                  <Card key={event.id} className="border-border bg-card">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {INTEREST_ROOMS.map((room) => (
+                  <Card 
+                    key={room.id} 
+                    className={`border-border bg-card cursor-pointer hover:shadow-lg transition-all ${joinedRooms.includes(room.id) ? "ring-2 ring-primary" : ""}`}
+                    onClick={() => handleJoinRoom(room.id)}
+                  >
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                            <BookOpen className="w-6 h-6 text-blue-600" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-foreground">{event.title}</h4>
-                            <p className="text-sm text-muted-foreground">{formatDate(event.event_date)}</p>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
+                          <room.icon className="w-6 h-6 text-primary" />
+                        </div>
+                        <div className="flex-grow">
+                          <h3 className="font-black tracking-tighter text-primary">{room.name}</h3>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Users className="w-3 h-3" />
+                            {room.members} members
+                            {room.active && (
+                              <span className="flex items-center gap-1 text-green-600">
+                                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                Active
+                              </span>
+                            )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <div className="text-right">
-                            <p className="text-sm font-bold text-foreground">{event.current_participants} joined</p>
-                            <p className="text-xs text-muted-foreground">{event.max_participants - event.current_participants} spots left</p>
-                          </div>
-                          <Button 
-                            size="sm" 
-                            className={`rounded-full ${joinedEvents.includes(event.id) ? "bg-blue-100 text-blue-600" : "bg-blue-600 text-white hover:bg-blue-700"}`}
-                            onClick={() => handleJoinEvent(event.id)}
-                          >
-                            {joinedEvents.includes(event.id) ? "Joined" : "Join"}
-                          </Button>
-                        </div>
+                        <ChevronRight className={`w-5 h-5 ${joinedRooms.includes(room.id) ? "text-primary" : "text-muted-foreground"}`} />
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
-            </div>
-          </TabsContent>
+
+              {/* Discussion Events */}
+              <div className="mt-8">
+                <h3 className="text-lg font-black tracking-tighter text-primary mb-4">Upcoming Discussions</h3>
+                <div className="space-y-4">
+                  {filteredEvents.filter(e => e.event_type === 'interest_room').map((event) => (
+                    <Card key={event.id} className="border-border bg-card">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                              <BookOpen className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="font-black tracking-tighter text-primary">{event.title}</h4>
+                              <p className="text-sm text-muted-foreground">{formatDate(event.event_date)}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right">
+                              <p className="text-sm font-bold text-foreground">{event.current_participants} joined</p>
+                              <p className="text-xs text-muted-foreground">{event.max_participants - event.current_participants} spots left</p>
+                            </div>
+                            <Button 
+                              size="sm" 
+                              className={`rounded-full ${joinedEvents.includes(event.id) ? "bg-blue-100 text-blue-600" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                              onClick={() => handleJoinEvent(event.id)}
+                            >
+                              {joinedEvents.includes(event.id) ? "Joined" : "Join"}
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
         </Tabs>
         </div>
       </main>

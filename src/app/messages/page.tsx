@@ -111,9 +111,9 @@ return (
 <ShieldCheck className="w-3 h-3 fill-current" />
 Secure Connection
 </div>
-<h1 className="text-5xl font-black tracking-tighter text-foreground">Messages</h1>
-<p className="text-muted-foreground font-medium italic mt-2">High-intent conversations with your matches.</p>
-</div>
+  <h1 className="text-5xl font-black tracking-tighter text-primary">Messages</h1>
+  <p className="text-muted-foreground font-medium italic mt-2">High-intent conversations with your matches.</p>
+  </div>
 <div className="w-16 h-16 rounded-[2rem] bg-card/50 backdrop-blur-3xl border border-border flex items-center justify-center shadow-2xl">
 <MessageCircle className="w-8 h-8 text-primary" />
 </div>
@@ -125,7 +125,7 @@ Secure Connection
 <div className="w-20 h-20 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-2xl">
 <MessageCircle className="w-10 h-10 text-muted-foreground/50" />
 </div>
-<h2 className="text-3xl font-black italic tracking-tighter mb-4 text-foreground">No connections yet</h2>
+<h2 className="text-3xl font-black italic tracking-tighter mb-4 text-primary">No connections yet</h2>
 <p className="text-muted-foreground font-medium italic max-w-xs mx-auto mb-10 leading-relaxed">
 Explore the feed to find intentional connections and start your journey.
 </p>
@@ -163,7 +163,7 @@ className="group"
 
 <div className="flex-grow min-w-0">
 <div className="flex items-center justify-between mb-1.5">
-<h3 className="text-xl font-black tracking-tighter text-foreground group-hover:text-primary transition-colors">
+<h3 className="text-xl font-black tracking-tighter text-primary group-hover:text-primary transition-colors">
 {chat.otherProfile?.full_name}
 </h3>
 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 whitespace-nowrap">

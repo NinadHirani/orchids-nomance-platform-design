@@ -215,15 +215,15 @@ return (
         </div>
 
         <header className="mb-12 text-center">
-          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-primary/10 backdrop-blur-xl border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-            <Sparkles className="w-3 h-3 fill-current" />
-            AI-Powered Coach
-          </div>
-          <h1 className="text-6xl font-black tracking-tighter text-foreground mb-4">Aura Coach</h1>
-          <p className="text-muted-foreground/80 max-w-lg mx-auto font-medium italic text-lg leading-relaxed">
-            Your personal AI advisor for building meaningful connections and optimizing your presence.
-          </p>
-        </header>
+            <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-primary/10 backdrop-blur-xl border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+              <Sparkles className="w-3 h-3 fill-current" />
+              AI-Powered Coach
+            </div>
+            <h1 className="text-6xl font-black tracking-tighter text-primary mb-4">Aura Coach</h1>
+            <p className="text-muted-foreground/80 max-w-lg mx-auto font-medium italic text-lg leading-relaxed">
+              Your personal AI advisor for building meaningful connections and optimizing your presence.
+            </p>
+          </header>
 
         <div className="flex justify-center p-2 bg-card/50 backdrop-blur-3xl border border-border rounded-[2.5rem] max-w-md mx-auto mb-12 shadow-2xl">
           {[
@@ -250,33 +250,33 @@ return (
           <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
             <CardHeader className="p-8 pb-4">
               <div className="flex items-center gap-4 mb-2">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                  <Bot className="w-6 h-6" />
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <Bot className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-3xl font-black tracking-tighter text-primary">Ask Your Coach</CardTitle>
+                    <CardDescription className="text-muted-foreground font-medium italic">
+                      Get personalized advice on dating, profiles, and connections
+                    </CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-3xl font-black tracking-tighter">Ask Your Coach</CardTitle>
-                  <CardDescription className="text-muted-foreground font-medium italic">
-                    Get personalized advice on dating, profiles, and connections
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="p-8 pt-4 space-y-6">
-              <div 
-                ref={chatScrollRef}
-                className="h-[400px] overflow-y-auto space-y-4 pr-2"
-              >
-                {chatMessages.length === 0 && (
-                  <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
-                    <div className="w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center">
-                      <Sparkles className="w-10 h-10 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-black tracking-tighter mb-2">Welcome to Aura Coach</h3>
-                      <p className="text-muted-foreground font-medium italic text-sm max-w-sm">
-                        I&apos;m here to help you navigate dating with confidence. Ask me anything!
-                      </p>
-                    </div>
+              </CardHeader>
+              <CardContent className="p-8 pt-4 space-y-6">
+                <div 
+                  ref={chatScrollRef}
+                  className="h-[400px] overflow-y-auto space-y-4 pr-2"
+                >
+                  {chatMessages.length === 0 && (
+                    <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
+                      <div className="w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center">
+                        <Sparkles className="w-10 h-10 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-black tracking-tighter mb-2 text-primary">Welcome to Aura Coach</h3>
+                        <p className="text-muted-foreground font-medium italic text-sm max-w-sm">
+                          I&apos;m here to help you navigate dating with confidence. Ask me anything!
+                        </p>
+                      </div>
                     <div className="flex flex-wrap gap-2 justify-center max-w-lg">
                       {quickPrompts.map((prompt, i) => (
                         <button
@@ -363,19 +363,19 @@ return (
         {activeTab === "photos" && (
           <div className="space-y-8">
             <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
-              <CardHeader className="p-10 pb-4">
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                    <Camera className="w-6 h-6" />
+                <CardHeader className="p-10 pb-4">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                      <Camera className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-3xl font-black tracking-tighter text-primary">Photo Strategy</CardTitle>
+                      <CardDescription className="text-muted-foreground font-medium italic">
+                        A diverse photo set tells your story better than any bio.
+                      </CardDescription>
+                    </div>
                   </div>
-                  <div>
-                    <CardTitle className="text-3xl font-black tracking-tighter">Photo Strategy</CardTitle>
-                    <CardDescription className="text-muted-foreground font-medium italic">
-                      A diverse photo set tells your story better than any bio.
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
+                </CardHeader>
               <CardContent className="p-10 pt-4 space-y-4">
                 {PHOTO_TIPS.map((tip, index) => (
                   <button 
@@ -401,14 +401,14 @@ return (
             </Card>
 
             <Card className="bg-card/30 backdrop-blur-xl border-dashed border-muted-foreground/30 rounded-[3rem] overflow-hidden">
-              <CardContent className="p-16 text-center">
-                <div className="w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                  <Camera className="w-10 h-10 text-primary" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tighter mb-2">AI Photo Analysis</h3>
-                <p className="text-muted-foreground font-medium italic mb-8 max-w-sm mx-auto">
-                  {photoScores ? "Analysis complete! See your scores below." : "Get AI-powered feedback on your photo strategy."}
-                </p>
+                <CardContent className="p-16 text-center">
+                  <div className="w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                    <Camera className="w-10 h-10 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-black tracking-tighter text-primary mb-2">AI Photo Analysis</h3>
+                  <p className="text-muted-foreground font-medium italic mb-8 max-w-sm mx-auto">
+                    {photoScores ? "Analysis complete! See your scores below." : "Get AI-powered feedback on your photo strategy."}
+                  </p>
                 <Button 
                   onClick={analyzePhotos}
                   disabled={photoAnalyzing}
@@ -468,19 +468,19 @@ return (
         {activeTab === "bio" && (
           <div className="space-y-8">
             <Card className="bg-card/50 backdrop-blur-3xl border-border shadow-2xl rounded-[3rem] overflow-hidden">
-              <CardHeader className="p-10 pb-4">
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                    <FileText className="w-6 h-6" />
+                <CardHeader className="p-10 pb-4">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                      <FileText className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-3xl font-black tracking-tighter text-primary">Bio Optimizer</CardTitle>
+                      <CardDescription className="text-muted-foreground font-medium italic">
+                        Transform your bio with AI-powered suggestions.
+                      </CardDescription>
+                    </div>
                   </div>
-                  <div>
-                    <CardTitle className="text-3xl font-black tracking-tighter">Bio Optimizer</CardTitle>
-                    <CardDescription className="text-muted-foreground font-medium italic">
-                      Transform your bio with AI-powered suggestions.
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
+                </CardHeader>
               <CardContent className="p-10 pt-4 space-y-8">
                 <div className="space-y-4">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 ml-4">Current Bio</label>
