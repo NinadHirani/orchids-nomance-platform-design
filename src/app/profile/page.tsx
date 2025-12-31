@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { Loader2, Heart, User, Users, UserPlus, LogOut, Edit3, MapPin, Sparkles } from "lucide-react";
+import { Loader2, Heart, User, Users, UserPlus, LogOut, Edit3, MapPin, Sparkles, LayoutGrid, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [posts, setPosts] = useState<any[]>([]);
 
   useEffect(() => {
     fetchProfile();
@@ -39,6 +40,14 @@ export default function ProfilePage() {
       }
 
       setProfile(data);
+
+      const { data: postsData } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("user_id", activeUserId)
+        .order("created_at", { ascending: false });
+      
+      setPosts(postsData || []);
     } catch (error: any) {
       console.error("Error fetching profile:", error);
       toast.error("Failed to load profile");
@@ -206,18 +215,76 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <div className="bg-primary/5 rounded-3xl p-6 border border-primary/10 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="w-6 h-6 text-primary" />
+            <div className="bg-primary/5 rounded-3xl p-6 border border-primary/10 flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground">Verified Status</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Complete your profile to unlock the verification badge and gain priority in match discovery.
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-foreground">Verified Status</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Complete your profile to unlock the verification badge and gain priority in match discovery.
-              </p>
+
+            {/* My Aura Section */}
+            <div className="space-y-6 pt-4">
+              <div className="flex items-center justify-between px-2">
+                <div className="flex items-center gap-2">
+                  <LayoutGrid className="w-5 h-5 text-primary" />
+                  <h2 className="text-xl font-black italic tracking-tighter">My Aura Feed</h2>
+                </div>
+                <Badge variant="outline" className="rounded-full border-primary/20 text-primary font-bold">
+                  {posts.length} Posts
+                </Badge>
+              </div>
+
+              {posts.length > 0 ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {posts.map((post) => (
+                    <Card key={post.id} className="rounded-3xl border-border overflow-hidden group hover:border-primary/50 transition-all">
+                      <div className="aspect-square relative bg-secondary/20">
+                        {post.image_url ? (
+                          post.media_type === 'video' ? (
+                            <video src={post.image_url} className="w-full h-full object-cover" muted loop autoPlay playsInline />
+                          ) : (
+                            <img src={post.image_url} alt="Aura" className="w-full h-full object-cover" />
+                          )
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center p-6">
+                            <p className="text-xs font-medium italic text-center text-muted-foreground line-clamp-3">
+                              "{post.content}"
+                            </p>
+                          </div>
+                        )}
+                        <div className="absolute top-2 right-2">
+                          <Badge className="bg-background/80 backdrop-blur-md text-foreground border-none text-[8px] font-black uppercase tracking-widest px-2 py-0.5">
+                            {post.likes_count || 0} <Heart className="w-2 h-2 ml-1 fill-primary text-primary" />
+                          </Badge>
+                        </div>
+                      </div>
+                      <CardContent className="p-4">
+                        <p className="text-[10px] font-medium italic line-clamp-2 text-muted-foreground">
+                          {post.content}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-secondary/10 rounded-3xl border border-dashed border-border">
+                  <p className="text-muted-foreground italic">You haven't shared your aura yet.</p>
+                  <Button 
+                    variant="link" 
+                    onClick={() => router.push("/social")}
+                    className="text-primary font-bold mt-2"
+                  >
+                    Go to Feed
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
-        </div>
       </main>
     </div>
   );

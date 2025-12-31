@@ -634,6 +634,7 @@ export default function SocialPage() {
                     </div>
                   </div>
                   
+                  {post.profiles?.id !== user?.id && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-accent">
@@ -670,6 +671,7 @@ export default function SocialPage() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  )}
                 </CardHeader>
                 
                 {post.image_url && (
@@ -702,6 +704,7 @@ export default function SocialPage() {
                 </CardContent>
 
                   <CardFooter className="p-6 pt-0 flex flex-col gap-6">
+                    {post.profiles?.id !== user?.id && (
                     <div className="flex flex-col items-center justify-center w-full gap-4">
                       {/* Interaction Hub Label */}
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Intentional Connection</span>
@@ -731,6 +734,7 @@ export default function SocialPage() {
                         </motion.button>
                       </div>
                     </div>
+                    )}
                     
                     <div className="flex items-center justify-center gap-3 px-2">
                     <div className="flex -space-x-2">

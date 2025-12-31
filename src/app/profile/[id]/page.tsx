@@ -11,8 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Loader2, ArrowLeft, Heart, Zap, Sparkles, 
   Moon, Dumbbell, Wine, Cigarette, Info,
-  Trophy, Target, UserCheck
-} from "lucide-react";
+    Trophy, Target, UserCheck, LayoutGrid
+  } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -20,26 +20,35 @@ export default function PublicProfilePage() {
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<any>(null);
+    const [profile, setProfile] = useState<any>(null);
+    const [posts, setPosts] = useState<any[]>([]);
+  
+    useEffect(() => {
+      if (params?.id) {
+        fetchProfile(params.id as string);
+      }
+    }, [params?.id]);
+  
+    const fetchProfile = async (id: string) => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", id)
+          .single();
+  
+        if (error) throw error;
+        setProfile(data);
 
-  useEffect(() => {
-    if (params?.id) {
-      fetchProfile(params.id as string);
-    }
-  }, [params?.id]);
-
-  const fetchProfile = async (id: string) => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-      if (error) throw error;
-      setProfile(data);
-    } catch (error: any) {
+        const { data: postsData } = await supabase
+          .from("posts")
+          .select("*")
+          .eq("user_id", id)
+          .order("created_at", { ascending: false });
+        
+        setPosts(postsData || []);
+      } catch (error: any) {
       console.error("Error fetching profile:", error);
       toast.error("Profile not found");
       router.push("/social");
@@ -234,7 +243,46 @@ export default function PublicProfilePage() {
                   </div>
                 </div>
 
-                {/* Action Bar */}
+                  {/* Recent Aura Section */}
+                  {posts.length > 0 && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <LayoutGrid className="w-4 h-4 text-primary" />
+                          <span className="font-black uppercase text-[10px] tracking-widest text-foreground">Recent Aura</span>
+                        </div>
+                        <Badge variant="outline" className="rounded-full border-border text-[8px] font-black px-2 py-0">
+                          {posts.length} SHARES
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {posts.slice(0, 6).map((post) => (
+                          <div key={post.id} className="aspect-square rounded-2xl overflow-hidden bg-card/40 border border-border group relative">
+                            {post.image_url ? (
+                              post.media_type === 'video' ? (
+                                <video src={post.image_url} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" muted loop autoPlay playsInline />
+                              ) : (
+                                <img src={post.image_url} alt="Aura" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                              )
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center p-4">
+                                <p className="text-[8px] font-medium italic text-center text-muted-foreground line-clamp-4">
+                                  "{post.content}"
+                                </p>
+                              </div>
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                               <p className="text-[8px] text-white font-medium italic line-clamp-2">
+                                 {post.content}
+                               </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action Bar */}
                 <div className="pt-8 relative flex gap-4">
                    <Button className="flex-1 h-16 rounded-[2rem] bg-foreground text-background font-black text-lg uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex gap-3 shadow-xl group">
                      <Heart className="w-6 h-6 fill-current text-primary" />
