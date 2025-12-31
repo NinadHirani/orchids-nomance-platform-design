@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Camera, MapPin, ShieldCheck, Heart, Sparkles, User, Info, Image as ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader2, Camera, MapPin, ShieldCheck, Heart, Sparkles, User, Info, Image as ImageIcon, Users, UserPlus, LogOut, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { PhotoUpload } from "@/components/profile-photos";
@@ -26,6 +27,7 @@ const AVAILABLE_VALUES = [
 ];
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -110,6 +112,33 @@ export default function ProfilePage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast.success("Logged out successfully");
+      router.push("/auth");
+    } catch (error: any) {
+      toast.error("Logout failed");
+    }
+  };
+
+  const handleSwitchAccount = async () => {
+    toast.info("Logging out to switch account...");
+    setTimeout(async () => {
+      await supabase.auth.signOut();
+      router.push("/auth");
+    }, 1000);
+  };
+
+  const handleAddAccount = async () => {
+    toast.info("Redirecting to create a new account...");
+    setTimeout(async () => {
+      await supabase.auth.signOut();
+      router.push("/auth?mode=signup");
+    }, 1000);
   };
 
   const toggleValue = (value: string) => {
@@ -239,33 +268,86 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-border shadow-sm overflow-hidden">
-            <CardHeader className="bg-secondary/10 border-b border-border/50">
-              <CardTitle className="text-xl">Values & Beliefs</CardTitle>
-              <CardDescription>Select up to 5 core values that define you.</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="flex flex-wrap gap-2">
-                {AVAILABLE_VALUES.map((val) => (
-                  <button
-                    key={val}
+            <Card className="rounded-3xl border-border shadow-sm overflow-hidden">
+              <CardHeader className="bg-secondary/10 border-b border-border/50">
+                <CardTitle className="text-xl">Values & Beliefs</CardTitle>
+                <CardDescription>Select up to 5 core values that define you.</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="flex flex-wrap gap-2">
+                  {AVAILABLE_VALUES.map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => toggleValue(val)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all border-2 ${
+                        profile.values.includes(val)
+                          ? "bg-primary border-primary text-primary-foreground shadow-md shadow-primary/20"
+                          : "bg-background border-border text-muted-foreground hover:border-primary/50"
+                      }`}
+                    >
+                      {val}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-4 italic">
+                  Values help our AI Coach find deeper compatibility matches for you.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-3xl border-border shadow-sm overflow-hidden">
+              <CardHeader className="bg-secondary/10 border-b border-border/50">
+                <CardTitle className="text-xl">Accounts Management</CardTitle>
+                <CardDescription>Manage your connected accounts and switch between them.</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex items-center justify-between p-4 bg-secondary/10 rounded-2xl border border-border/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                      {user?.email?.[0].toUpperCase()}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="font-bold text-foreground truncate max-w-[200px]">{user?.email}</p>
+                      <p className="text-xs text-muted-foreground">Currently logged in</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 shrink-0">Active</Badge>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Button 
                     type="button"
-                    onClick={() => toggleValue(val)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all border-2 ${
-                      profile.values.includes(val)
-                        ? "bg-primary border-primary text-primary-foreground shadow-md shadow-primary/20"
-                        : "bg-background border-border text-muted-foreground hover:border-primary/50"
-                    }`}
+                    variant="outline" 
+                    className="h-12 rounded-xl border-2 border-border font-bold text-muted-foreground hover:text-foreground"
+                    onClick={handleSwitchAccount}
                   >
-                    {val}
-                  </button>
-                ))}
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-4 italic">
-                Values help our AI Coach find deeper compatibility matches for you.
-              </p>
-            </CardContent>
-          </Card>
+                    <Users className="w-4 h-4 mr-2" />
+                    Switch Account
+                  </Button>
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    className="h-12 rounded-xl border-2 border-border font-bold text-muted-foreground hover:text-foreground"
+                    onClick={handleAddAccount}
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Add Account
+                  </Button>
+                </div>
+                
+                <Button 
+                  type="button"
+                  variant="ghost" 
+                  className="w-full h-12 rounded-xl font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout Current Account
+                </Button>
+              </CardContent>
+            </Card>
+
 
           <div className="flex gap-4 pt-4">
             <Button 
