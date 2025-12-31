@@ -221,15 +221,15 @@ export default function MatchesPage() {
 
       <main className="container mx-auto px-4 pt-12 max-w-4xl relative z-10">
           <header className="mb-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <h1 className="text-4xl font-black tracking-tighter text-foreground italic flex items-center gap-3">
-                Connections <Sparkles className="w-8 h-8 text-primary fill-current" />
-              </h1>
-              <p className="text-muted-foreground mt-2 font-medium">Real people. Real intentions.</p>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <h1 className="text-4xl font-black tracking-tighter text-foreground italic flex items-center gap-3">
+                  Connections <Sparkles className="w-8 h-8 text-primary fill-current" />
+                </h1>
+              </motion.div>
+
           </header>
 
 

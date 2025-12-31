@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import { Navbar } from "@/components/navbar";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { AuthProvider } from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SparkTrail } from "@/components/spark-trail";
@@ -42,9 +43,10 @@ export default function RootLayout({
             >
               <AuthProvider>
                 <Header />
-                <main className="pt-16 pb-16">
+                <main className="pt-16 min-h-[calc(100vh-64px)]">
                   {children}
                 </main>
+                  <Footer />
                   <Navbar />
                   <SparkTrail />
                   <Toaster position="top-center" richColors />
