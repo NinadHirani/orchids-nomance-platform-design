@@ -209,7 +209,6 @@ function AuthContent() {
             transition={{ delay: 0.2 }}
           >
             <h1 className="text-5xl font-black italic tracking-tighter text-white mb-2 drop-shadow-2xl">NOMANCE</h1>
-            <p className="text-primary font-black tracking-tight uppercase text-[10px] tracking-[0.4em] opacity-80 mb-1">Frequency Integration</p>
             <p className="text-white/40 font-black tracking-tight uppercase text-[8px] tracking-[0.3em] italic">"Real people. Real intentions."</p>
           </motion.div>
         </div>
@@ -234,18 +233,18 @@ function AuthContent() {
                 {isSignUp ? "Initialize" : "Connect"}
               </CardTitle>
               <CardDescription className="font-bold text-zinc-500 mt-2">
-                {isSignUp ? "Sync your aura with the network" : "Re-establish your neural frequency"}
+                {isSignUp ? "Join a community of intentional people" : "Welcome back to Nomance"}
               </CardDescription>
             </CardHeader>
 
             <CardContent className="p-10 pt-6 relative">
               <form onSubmit={handleAuth} className="space-y-8">
                 <div className="space-y-3">
-                  <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-primary/70 ml-1">Vocal ID / Email</Label>
+                  <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-primary/70 ml-1">Email Address</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="aura@nomance.com"
+                    placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -254,7 +253,7 @@ function AuthContent() {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-primary/70 ml-1">Encryption Core</Label>
+                  <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-primary/70 ml-1">Password</Label>
                   <Input
                     id="password"
                     type="password"
@@ -275,7 +274,7 @@ function AuthContent() {
                     <Loader2 className="w-6 h-6 animate-spin" />
                   ) : (
                     <span className="flex items-center justify-center gap-3 relative z-10">
-                      {isSignUp ? "Start Initialization" : "Enter Network"}
+                      {isSignUp ? "Sign Up" : "Sign In"}
                       <Zap className="w-5 h-5 fill-current" />
                     </span>
                   )}
@@ -296,7 +295,7 @@ function AuthContent() {
                 onClick={() => setIsSignUp(!isSignUp)}
                 className="w-full text-xs font-black text-zinc-400 hover:text-primary transition-colors flex items-center justify-center gap-2 uppercase tracking-widest"
               >
-                {isSignUp ? "Existing Frequency? Sign In" : "New Signal? Initialize Aura"}
+                {isSignUp ? "Already have an account? Sign In" : "New here? Create account"}
               </button>
             </CardFooter>
           </Card>
@@ -305,11 +304,11 @@ function AuthContent() {
         <div className="mt-12 flex items-center justify-center gap-10 px-4 opacity-40">
           <div className="flex flex-col items-center gap-2 group cursor-default">
             <ShieldCheck className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-            <span className="text-[7px] font-black uppercase tracking-[0.3em] text-center">Encrypted<br/>Intent</span>
+            <span className="text-[7px] font-black uppercase tracking-[0.3em] text-center">Secure<br/>Auth</span>
           </div>
           <div className="flex flex-col items-center gap-2 group cursor-default">
             <Sparkles className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-            <span className="text-[7px] font-black uppercase tracking-[0.3em] text-center">Verified<br/>Consciousness</span>
+            <span className="text-[7px] font-black uppercase tracking-[0.3em] text-center">Verified<br/>Profiles</span>
           </div>
         </div>
       </motion.div>

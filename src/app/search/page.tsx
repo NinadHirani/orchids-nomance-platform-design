@@ -132,11 +132,12 @@ export default function SearchPage() {
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <h1 className="text-4xl font-black italic tracking-tighter">DISCOVER</h1>
-              <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
-                <Zap className="w-4 h-4 text-primary fill-current" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">High Frequency</span>
+                <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
+                  <Zap className="w-4 h-4 text-primary fill-current" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">High Intent</span>
+                </div>
               </div>
-            </div>
+
 
             {/* Search & Filter Bar */}
             <div className="flex gap-4">
@@ -158,7 +159,7 @@ export default function SearchPage() {
                 </SheetTrigger>
                 <SheetContent side="right" className="bg-background/95 backdrop-blur-2xl border-border w-full sm:max-w-md rounded-l-[3rem]">
                   <SheetHeader className="pb-8">
-                    <SheetTitle className="text-3xl font-black italic tracking-tighter">REFINE VIBES</SheetTitle>
+                    <SheetTitle className="text-3xl font-black italic tracking-tighter">REFINE SEARCH</SheetTitle>
                   </SheetHeader>
                   
                   <div className="space-y-12 py-6">
@@ -195,7 +196,7 @@ export default function SearchPage() {
 
                     {/* Intent Filter */}
                     <div className="space-y-6">
-                      <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground px-1">Intent Frequency</Label>
+                      <Label className="text-sm font-black uppercase tracking-widest text-muted-foreground px-1">Intent</Label>
                       <ToggleGroup 
                         type="multiple" 
                         value={selectedIntent} 
@@ -220,10 +221,11 @@ export default function SearchPage() {
 
                   <div className="absolute bottom-12 left-6 right-6">
                     <Button onClick={() => fetchProfiles()} className="w-full h-16 rounded-2xl font-black text-lg bg-gradient-to-r from-primary to-purple-600 border-none shadow-xl shadow-primary/20">
-                      APPLY FREQUENCIES
+                      APPLY FILTERS
                     </Button>
                   </div>
                 </SheetContent>
+
               </Sheet>
             </div>
           </div>

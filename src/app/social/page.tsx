@@ -101,72 +101,72 @@ export default function SocialPage() {
     fetchData();
   }, []); 
 
-  const handleMatchAction = async (targetUserId: string, action: 'spark' | 'pass', postId: string) => {
-    if (!user || user.id === targetUserId) {
-        toast.info("Energy check: This is your own creation!");
-        return;
-    }
+    const handleMatchAction = async (targetUserId: string, action: 'spark' | 'pass', postId: string) => {
+      if (!user || user.id === targetUserId) {
+          toast.info("This is your own creation!");
+          return;
+      }
 
-    if (action === 'pass') {
-        setPosts(prev => prev.filter(p => p.id !== postId));
-        toast.info("Vibe check: Moving forward.");
-        return;
-    }
+      if (action === 'pass') {
+          setPosts(prev => prev.filter(p => p.id !== postId));
+          toast.info("Moving forward.");
+          return;
+      }
 
-    // Remove from feed immediately for 'spark' too
-    setPosts(prev => prev.filter(p => p.id !== postId));
+      // Remove from feed immediately for 'spark' too
+      setPosts(prev => prev.filter(p => p.id !== postId));
 
-    const { error } = await supabase.from("matches").insert({
-      user_1: user.id,
-      user_2: targetUserId,
-      status: 'pending'
-    });
+      const { error } = await supabase.from("matches").insert({
+        user_1: user.id,
+        user_2: targetUserId,
+        status: 'pending'
+      });
 
-    // Update likes count on the post
-    await supabase.rpc('increment_likes_count', { post_id: postId });
-    
-    if (error) {
-      const { data: reverseLike } = await supabase
-        .from("matches")
-        .select("*")
-        .eq("user_1", targetUserId)
-        .eq("user_2", user.id)
+      // Update likes count on the post
+      await supabase.rpc('increment_likes_count', { post_id: postId });
+      
+      if (error) {
+        const { data: reverseLike } = await supabase
+          .from("matches")
+          .select("*")
+          .eq("user_1", targetUserId)
+          .eq("user_2", user.id)
+          .single();
+
+        if (reverseLike) {
+          await supabase.from("matches").update({ status: 'accepted' }).eq("id", reverseLike.id);
+          toast.success("It's a match!");
+        } else {
+          toast.info("Interest already sent.");
+        }
+      } else {
+        toast.success("Spark sent!");
+      }
+    };
+
+    const createPost = async () => {
+      if (!newPostContent.trim() && !newPostImage.trim()) return;
+
+      const { data, error } = await supabase
+        .from("posts")
+        .insert({
+          user_id: user.id,
+          content: newPostContent,
+          image_url: newPostImage || "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=800&q=80",
+        })
+        .select("*, profiles(full_name, avatar_url)")
         .single();
 
-      if (reverseLike) {
-        await supabase.from("matches").update({ status: 'accepted' }).eq("id", reverseLike.id);
-        toast.success("Connection Sparked! Mutual energy detected.");
+      if (error) {
+        toast.error("Failed to post");
       } else {
-        toast.info("Energy already sent. Patiently waiting for the spark.");
+        setPosts([data, ...posts]);
+        setNewPostContent("");
+        setNewPostImage("");
+        setIsCreatingPost(false);
+        toast.success("Shared!");
       }
-    } else {
-      toast.success("Spark sent! Intentionality is the new frequency.");
-    }
-  };
-
-  const createPost = async () => {
-    if (!newPostContent.trim() && !newPostImage.trim()) return;
-
-    const { data, error } = await supabase
-      .from("posts")
-      .insert({
-        user_id: user.id,
-        content: newPostContent,
-        image_url: newPostImage || "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=800&q=80",
-      })
-      .select("*, profiles(full_name, avatar_url)")
-      .single();
-
-    if (error) {
-      toast.error("Failed to share energy");
-    } else {
-      setPosts([data, ...posts]);
-      setNewPostContent("");
-      setNewPostImage("");
-      setIsCreatingPost(false);
-      toast.success("Frequency shared!");
-    }
-  };
+    };
 
   const nextStory = () => {
     if (storyIndex < selectedStory.items.length - 1) {
@@ -212,11 +212,12 @@ export default function SocialPage() {
             >
               <div className="w-16 h-16 rounded-3xl bg-secondary/20 border-2 border-dashed border-muted-foreground/30 flex items-center justify-center p-1 transition-all group-hover:border-primary/50 group-hover:bg-primary/5">
                 <div className="w-full h-full rounded-2xl bg-secondary/10 flex items-center justify-center">
-                  <Plus className="w-6 h-6 text-primary" />
+                    <Plus className="w-6 h-6 text-primary" />
+                  </div>
                 </div>
-              </div>
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Add Vibe</span>
-            </motion.button>
+                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Add Story</span>
+              </motion.button>
+
 
             {stories.map((group, idx) => (
               <motion.button 
@@ -312,7 +313,7 @@ export default function SocialPage() {
                   <CardFooter className="p-6 pt-0 flex flex-col gap-6">
                     <div className="flex flex-col items-center justify-center w-full gap-4">
                       {/* Interaction Hub Label */}
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Align Frequencies</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Intentional Connection</span>
                       
                       {/* Extraordinary Interaction Hub */}
                       <div className="flex items-center gap-6 p-2 bg-card/80 rounded-[2.5rem] border border-border backdrop-blur-3xl shadow-2xl">
@@ -351,10 +352,11 @@ export default function SocialPage() {
                       ))}
                     </div>
                     <span className="text-[10px] font-black italic tracking-tight text-muted-foreground">
-                      {post.likes_count || 0} FREQUENCIES ALIGNED
+                      {post.likes_count || 0} INTERESTED
                     </span>
                   </div>
                 </CardFooter>
+
               </Card>
             </motion.div>
           ))}
@@ -415,38 +417,39 @@ export default function SocialPage() {
                       <AvatarFallback>{selectedStory.user?.full_name?.[0]}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-sm font-black italic tracking-tighter text-white">
-                        {selectedStory.user?.full_name}
-                      </span>
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE FREQUENCY</span>
+                        <span className="text-sm font-black italic tracking-tighter text-white">
+                          {selectedStory.user?.full_name}
+                        </span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE STORY</span>
+                      </div>
                     </div>
+                    <motion.button 
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setSelectedStory(null)} 
+                      className="w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white backdrop-blur-xl border border-white/10"
+                    >
+                      <X className="w-6 h-6" />
+                    </motion.button>
                   </div>
-                  <motion.button 
-                    whileHover={{ scale: 1.1, rotate: 90 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setSelectedStory(null)} 
-                    className="w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white backdrop-blur-xl border border-white/10"
-                  >
-                    <X className="w-6 h-6" />
-                  </motion.button>
-                </div>
 
-                {/* Story Image */}
-                <img 
-                  src={selectedStory.items[storyIndex].image_url} 
-                  className="w-full h-full object-cover"
-                  alt="Story"
-                />
+                  {/* Story Image */}
+                  <img 
+                    src={selectedStory.items[storyIndex].image_url} 
+                    className="w-full h-full object-cover"
+                    alt="Story"
+                  />
 
-                {/* Interaction Overlay */}
-                <div className="absolute bottom-12 left-8 right-8 z-20">
-                   <div className="flex items-center gap-4">
-                      <Input className="flex-1 bg-background/50 border-border rounded-2xl h-14 backdrop-blur-xl text-foreground placeholder:text-muted-foreground placeholder:italic font-bold" placeholder="Send a spark..." />
-                      <Button className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground shadow-xl shadow-primary/10">
-                         <Zap className="w-6 h-6 fill-current" />
-                      </Button>
-                   </div>
-                </div>
+                  {/* Interaction Overlay */}
+                  <div className="absolute bottom-12 left-8 right-8 z-20">
+                     <div className="flex items-center gap-4">
+                        <Input className="flex-1 bg-background/50 border-border rounded-2xl h-14 backdrop-blur-xl text-foreground placeholder:text-muted-foreground placeholder:italic font-bold" placeholder="Say something..." />
+                        <Button className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground shadow-xl shadow-primary/10">
+                           <Zap className="w-6 h-6 fill-current" />
+                        </Button>
+                     </div>
+                  </div>
+
 
               {/* Navigation Controls */}
               <div className="absolute inset-0 flex z-10">

@@ -158,7 +158,7 @@ export default function MatchesPage() {
     setCurrentIndex(0);
     setDailyLimitReached(false);
     setMoodMatching(false);
-    toast.success(`Now matching with people who feel like ${mood}!`);
+    toast.success(`Now matching with people ready to ${mood}!`);
   };
 
   const handleDiscoveryAction = async (action: 'like' | 'skip') => {
@@ -189,12 +189,12 @@ export default function MatchesPage() {
 
         if (reverseLike) {
           await supabase.from("matches").update({ status: 'accepted' }).eq("id", reverseLike.id);
-          toast.success("It's a mutual match! Intentional connection formed.");
+          toast.success("It's a match! Connection formed.");
           // Update matches list immediately
           fetchAllData();
         }
       } else {
-        toast.info("Interest sent. High-intent signals are valued here.");
+        toast.info("Interest sent.");
         // Update liked list immediately
         fetchAllData();
       }
@@ -220,17 +220,18 @@ export default function MatchesPage() {
       </div>
 
       <main className="container mx-auto px-4 pt-12 max-w-4xl relative z-10">
-        <header className="mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h1 className="text-4xl font-black tracking-tighter text-foreground italic flex items-center gap-3">
-              Frequencies <Sparkles className="w-8 h-8 text-primary fill-current" />
-            </h1>
-            <p className="text-muted-foreground mt-2 font-medium">Align your intentions and spark connections.</p>
-          </motion.div>
-        </header>
+          <header className="mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <h1 className="text-4xl font-black tracking-tighter text-foreground italic flex items-center gap-3">
+                Connections <Sparkles className="w-8 h-8 text-primary fill-current" />
+              </h1>
+              <p className="text-muted-foreground mt-2 font-medium">Real people. Real intentions.</p>
+            </motion.div>
+          </header>
+
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-secondary/20 p-1 rounded-2xl h-14 mb-8">
@@ -251,14 +252,15 @@ export default function MatchesPage() {
               <div className="max-w-xl w-full">
                 <AnimatePresence mode="wait">
                   {moodMatching ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-20"
-                    >
-                      <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-                      <p className="text-muted-foreground font-black italic uppercase tracking-widest text-[10px]">Scanning Frequencies...</p>
-                    </motion.div>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-20"
+                      >
+                        <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+                        <p className="text-muted-foreground font-black italic uppercase tracking-widest text-[10px]">Finding connections...</p>
+                      </motion.div>
+
                   ) : dailyLimitReached || profiles.length === 0 ? (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
@@ -325,169 +327,170 @@ export default function MatchesPage() {
                             </div>
                           </CardHeader>
                           
-                          <CardContent className="px-8 pb-8 space-y-6 text-center">
-                            <p className="text-foreground/80 leading-relaxed font-medium italic">
-                              &quot;{profiles[currentIndex].bio || "Sharing energy through presence."}&quot;
-                            </p>
-                            
-                            {profiles[currentIndex].values && profiles[currentIndex].values.length > 0 && (
-                              <div className="flex flex-wrap justify-center gap-2">
-                                {profiles[currentIndex].values.map((val: string) => (
-                                  <Badge key={val} variant="secondary" className="bg-primary/5 text-primary border-none px-3 py-1 text-[8px] font-black uppercase tracking-widest">
-                                    {val}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </CardContent>
-  
-                        <CardFooter className="p-8 pt-0 flex flex-col gap-6">
-                          <div className="flex items-center justify-center w-full">
-                            <div className="flex items-center gap-6 p-2 bg-card/80 rounded-[2.5rem] border border-border backdrop-blur-3xl shadow-xl">
-                              <motion.button
-                                whileHover={{ scale: 1.05, x: -5, backgroundColor: "hsl(var(--accent))" }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => handleDiscoveryAction('skip')}
-                                className="h-14 px-8 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-all flex items-center gap-3 border border-transparent hover:border-border"
-                              >
-                                <X className="w-4 h-4" />
-                                Pass
-                              </motion.button>
+                            <CardContent className="px-8 pb-8 space-y-6 text-center">
+                              <p className="text-foreground/80 leading-relaxed font-medium italic">
+                                &quot;{profiles[currentIndex].bio || "Looking for real connections."}&quot;
+                              </p>
                               
-                              <div className="w-px h-8 bg-border" />
-  
-                              <motion.button
-                                whileHover={{ scale: 1.05, x: 5, boxShadow: "0 0 40px rgba(var(--primary), 0.2)" }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => handleDiscoveryAction('like')}
-                                className="h-14 px-10 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] bg-foreground text-background flex items-center gap-3 group/interest"
-                              >
-                                <Heart className="w-5 h-5 fill-current transition-transform group-hover/interest:scale-125" />
-                                Spark
-                              </motion.button>
+                              {profiles[currentIndex].values && profiles[currentIndex].values.length > 0 && (
+                                <div className="flex flex-wrap justify-center gap-2">
+                                  {profiles[currentIndex].values.map((val: string) => (
+                                    <Badge key={val} variant="secondary" className="bg-primary/5 text-primary border-none px-3 py-1 text-[8px] font-black uppercase tracking-widest">
+                                      {val}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
+                            </CardContent>
+    
+                          <CardFooter className="p-8 pt-0 flex flex-col gap-6">
+                            <div className="flex items-center justify-center w-full">
+                              <div className="flex items-center gap-6 p-2 bg-card/80 rounded-[2.5rem] border border-border backdrop-blur-3xl shadow-xl">
+                                <motion.button
+                                  whileHover={{ scale: 1.05, x: -5, backgroundColor: "hsl(var(--accent))" }}
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={() => handleDiscoveryAction('skip')}
+                                  className="h-14 px-8 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-all flex items-center gap-3 border border-transparent hover:border-border"
+                                >
+                                  <X className="w-4 h-4" />
+                                  Pass
+                                </motion.button>
+                                
+                                <div className="w-px h-8 bg-border" />
+    
+                                <motion.button
+                                  whileHover={{ scale: 1.05, x: 5, boxShadow: "0 0 40px rgba(var(--primary), 0.2)" }}
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={() => handleDiscoveryAction('like')}
+                                  className="h-14 px-10 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.2em] bg-foreground text-background flex items-center gap-3 group/interest"
+                                >
+                                  <Heart className="w-5 h-5 fill-current transition-transform group-hover/interest:scale-125" />
+                                  Spark
+                                </motion.button>
+                              </div>
                             </div>
-                          </div>
-                        </CardFooter>
-                      </Card>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className="mt-12 space-y-8">
-                  <div className="bg-secondary/10 p-8 rounded-[3rem] border border-border backdrop-blur-md">
-                    <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-6 text-center">How do you feel today?</h3>
-                    <div className="flex justify-center gap-4">
-                      {MOODS.map((mood) => (
-                        <button
-                          key={mood.id}
-                          onClick={() => handleMoodChange(mood.id)}
-                          disabled={moodMatching}
-                          className={`flex flex-col items-center gap-3 p-4 rounded-3xl border-2 transition-all ${
-                            selectedMood === mood.id 
-                              ? "border-primary bg-primary/5 shadow-lg shadow-primary/10" 
-                              : "border-border bg-card/50 hover:border-primary/30"
-                          }`}
-                        >
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${mood.color}`}>
-                            <mood.icon className="w-6 h-6" />
-                          </div>
-                          <span className={`font-black text-[8px] uppercase tracking-widest ${selectedMood === mood.id ? "text-primary" : "text-foreground"}`}>
-                            {mood.label}
-                          </span>
-                        </button>
-                      ))}
+                          </CardFooter>
+                        </Card>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+  
+                  <div className="mt-12 space-y-8">
+                    <div className="bg-secondary/10 p-8 rounded-[3rem] border border-border backdrop-blur-md">
+                      <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-6 text-center">How do you feel today?</h3>
+                      <div className="flex justify-center gap-4">
+                        {MOODS.map((mood) => (
+                          <button
+                            key={mood.id}
+                            onClick={() => handleMoodChange(mood.id)}
+                            disabled={moodMatching}
+                            className={`flex flex-col items-center gap-3 p-4 rounded-3xl border-2 transition-all ${
+                              selectedMood === mood.id 
+                                ? "border-primary bg-primary/5 shadow-lg shadow-primary/10" 
+                                : "border-border bg-card/50 hover:border-primary/30"
+                            }`}
+                          >
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${mood.color}`}>
+                              <mood.icon className="w-6 h-6" />
+                            </div>
+                            <span className={`font-black text-[8px] uppercase tracking-widest ${selectedMood === mood.id ? "text-primary" : "text-foreground"}`}>
+                              {mood.label}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </TabsContent>
-
-          {/* Mutual Sparks Tab */}
-          <TabsContent value="mutual">
-            {matches.length === 0 ? (
-              <EmptyState 
-                icon={<Heart className="w-12 h-12 text-primary" />}
-                title="No mutual sparks yet"
-                description="Keep sharing your energy. The right alignment is just one spark away."
-              />
-            ) : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {matches.map((match) => (
-                  <MatchCard key={match.id} profile={match.profile} id={match.id} isMutual={true} />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Sent Energy Tab */}
-          <TabsContent value="liked">
-            {likedProfiles.length === 0 ? (
-              <EmptyState 
-                icon={<Sparkles className="w-12 h-12 text-primary" />}
-                title="No sent sparks"
-                description="When you find a frequency that resonates, send a spark to see if your intentions align."
-              />
-            ) : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {likedProfiles.map((liked) => (
-                  <MatchCard key={liked.id} profile={liked.profile} id={liked.id} isMutual={false} />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
-  );
-}
-
-function MatchCard({ profile, id, isMutual }: { profile: any, id: string, isMutual: boolean }) {
-  if (!profile) return null;
+            </TabsContent>
   
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ y: -5 }}
-    >
-      <Link href={isMutual ? `/messages/${id}` : "#"}>
-        <Card className="overflow-hidden border-border bg-card/50 backdrop-blur-md hover:border-primary/30 transition-all duration-300 rounded-[2rem] group shadow-xl">
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="relative shrink-0">
-              <Avatar className="w-20 h-20 rounded-2xl ring-2 ring-primary/10 transition-all group-hover:ring-primary/40">
-                <AvatarImage 
-                  src={profile.avatar_url || `https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop`} 
-                  className="object-cover"
+            {/* Mutual Sparks Tab */}
+            <TabsContent value="mutual">
+              {matches.length === 0 ? (
+                <EmptyState 
+                  icon={<Heart className="w-12 h-12 text-primary" />}
+                  title="No mutual sparks yet"
+                  description="Keep exploring. Your next connection is waiting."
                 />
-                <AvatarFallback className="bg-secondary font-black">{profile.full_name?.[0]}</AvatarFallback>
-              </Avatar>
-              {isMutual && (
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg border-2 border-background">
-                  <MessageCircle className="w-3 h-3 fill-current" />
+              ) : (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {matches.map((match) => (
+                    <MatchCard key={match.id} profile={match.profile} id={match.id} isMutual={true} />
+                  ))}
                 </div>
               )}
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-black text-foreground italic tracking-tighter truncate">{profile.full_name}</h3>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge variant="secondary" className="bg-primary/5 text-primary border-none text-[8px] font-black uppercase tracking-widest px-2 py-0.5">
-                  {profile.intent?.replace(/_/g, ' ')}
-                </Badge>
-              </div>
-              {!isMutual && (
-                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-2 flex items-center gap-1">
-                  <Zap className="w-2 h-2 fill-current text-primary" /> Energy Sent
-                </p>
+            </TabsContent>
+  
+            {/* Sent Energy Tab */}
+            <TabsContent value="liked">
+              {likedProfiles.length === 0 ? (
+                <EmptyState 
+                  icon={<Sparkles className="w-12 h-12 text-primary" />}
+                  title="No sent sparks"
+                  description="When you find someone who resonates, send a spark to show interest."
+                />
+              ) : (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {likedProfiles.map((liked) => (
+                    <MatchCard key={liked.id} profile={liked.profile} id={liked.id} isMutual={false} />
+                  ))}
+                </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
-      </Link>
-    </motion.div>
-  );
-}
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    );
+  }
+  
+  function MatchCard({ profile, id, isMutual }: { profile: any, id: string, isMutual: boolean }) {
+    if (!profile) return null;
+    
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        whileHover={{ y: -5 }}
+      >
+        <Link href={isMutual ? `/messages/${id}` : "#"}>
+          <Card className="overflow-hidden border-border bg-card/50 backdrop-blur-md hover:border-primary/30 transition-all duration-300 rounded-[2rem] group shadow-xl">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="relative shrink-0">
+                <Avatar className="w-20 h-20 rounded-2xl ring-2 ring-primary/10 transition-all group-hover:ring-primary/40">
+                  <AvatarImage 
+                    src={profile.avatar_url || `https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop`} 
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-secondary font-black">{profile.full_name?.[0]}</AvatarFallback>
+                </Avatar>
+                {isMutual && (
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg border-2 border-background">
+                    <MessageCircle className="w-3 h-3 fill-current" />
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-black text-foreground italic tracking-tighter truncate">{profile.full_name}</h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-none text-[8px] font-black uppercase tracking-widest px-2 py-0.5">
+                    {profile.intent?.replace(/_/g, ' ')}
+                  </Badge>
+                </div>
+                {!isMutual && (
+                  <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-2 flex items-center gap-1">
+                    <Zap className="w-2 h-2 fill-current text-primary" /> Interest Sent
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </motion.div>
+    );
+  }
+
 
 function EmptyState({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
