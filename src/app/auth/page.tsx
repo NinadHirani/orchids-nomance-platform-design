@@ -127,16 +127,16 @@ function AuthContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFF5EE] relative overflow-hidden px-4 py-12 perspective-[1500px]">
+    <div className="min-h-screen flex items-center justify-center bg-[#050505] relative overflow-hidden px-4 py-12 perspective-[1500px]">
       <FallingHearts />
       {/* 3D Perspective Grid Floor */}
       <div 
-        className="absolute inset-0 z-0 opacity-10 pointer-events-none"
+        className="absolute inset-0 z-0 opacity-20 pointer-events-none"
         style={{
           background: `
-            linear-gradient(to bottom, transparent 0%, #FFF5EE 100%),
-            linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px),
-            linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px)
+            linear-gradient(to bottom, transparent 0%, #050505 100%),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)
           `,
           backgroundSize: '100% 100%, 50px 50px, 50px 50px',
           transform: 'rotateX(60deg) translateY(100px) scale(3)',
@@ -208,7 +208,7 @@ function AuthContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h1 className="text-5xl font-black italic tracking-tighter text-zinc-900 mb-2 drop-shadow-sm">NOMANCE</h1>
+            <h1 className="text-5xl font-black italic tracking-tighter text-white mb-2 drop-shadow-2xl">NOMANCE</h1>
             <p className="text-primary font-black tracking-tight uppercase text-[10px] tracking-[0.4em] opacity-80">Frequency Integration</p>
           </motion.div>
         </div>
@@ -322,7 +322,7 @@ function AuthContent() {
             x: [0, 20, 0]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-20 -left-20 w-64 h-64 border border-black/5 rounded-[4rem] rotate-12"
+          className="absolute -top-20 -left-20 w-64 h-64 border border-white/5 rounded-[4rem] rotate-12"
         />
         <motion.div
           animate={{ 
@@ -331,7 +331,7 @@ function AuthContent() {
             x: [0, -30, 0]
           }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-40 -right-40 w-96 h-96 border border-black/5 rounded-full"
+          className="absolute -bottom-40 -right-40 w-96 h-96 border border-white/5 rounded-full"
         />
       </div>
     </div>
