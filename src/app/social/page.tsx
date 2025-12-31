@@ -661,7 +661,7 @@ export default function SocialPage() {
                       </div>
                     </Link>
                     <div>
-                      <Link href={`/profile/${post.profiles?.id}`} className="text-sm font-black italic tracking-tighter text-foreground hover:text-blue-400 transition-colors">
+                      <Link href={`/profile/${post.profiles?.id}`} className="text-sm font-black italic tracking-tighter bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent hover:to-blue-400 transition-all duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                         {post.profiles?.full_name}
                       </Link>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
