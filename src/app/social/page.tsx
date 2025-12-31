@@ -478,7 +478,7 @@ export default function SocialPage() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
             >
-              <Card className="bg-card/50 border-border backdrop-blur-md rounded-[3rem] overflow-hidden shadow-2xl group hover:border-primary/20 transition-all duration-500">
+              <Card className="bg-card/50 border-border backdrop-blur-md rounded-[3rem] overflow-hidden group hover:border-primary/20 transition-all duration-500">
                 <CardHeader className="p-6 flex flex-row items-center justify-between space-y-0">
                   <div className="flex items-center gap-4">
                     <Link href={`/profile/${post.profiles?.id}`} className="relative group/avatar">
@@ -506,7 +506,7 @@ export default function SocialPage() {
                 
                 {post.image_url && (
                   <div className="px-4 pb-4">
-                    <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden relative shadow-inner bg-black">
+                    <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden relative bg-secondary/5">
                       {post.media_type === 'video' ? (
                         <video 
                           src={post.image_url} 
@@ -523,7 +523,6 @@ export default function SocialPage() {
                           className="absolute inset-0 w-full h-full object-cover"
                         />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
                   </div>
                 )}
