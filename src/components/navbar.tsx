@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const pathname = usePathname();
 
+  const isHidden = ["/auth", "/onboarding"].includes(pathname);
+  if (isHidden) return null;
+
   const navLinks = [
     { href: "/social", label: "Social", icon: LayoutGrid },
     { href: "/messages", label: "Chat", icon: MessageCircle },
