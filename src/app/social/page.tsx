@@ -26,15 +26,21 @@ export default function SocialPage() {
   const [user, setUser] = useState<any>(null);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
   const [newPostContent, setNewPostContent] = useState("");
-  const [newPostImage, setNewPostImage] = useState("");
-  const [selectedStory, setSelectedStory] = useState<any>(null);
-  const [storyIndex, setStoryIndex] = useState(0);
-  const [isUploadingStory, setIsUploadingStory] = useState(false);
-  const [isUploadingPostImage, setIsUploadingPostImage] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const postFileInputRef = useRef<HTMLInputElement>(null);
+    const [newPostImage, setNewPostImage] = useState("");
+    const [newPostMediaType, setNewPostMediaType] = useState("image");
+    const [selectedStory, setSelectedStory] = useState<any>(null);
+    const [storyIndex, setStoryIndex] = useState(0);
+    const [isUploadingStory, setIsUploadingStory] = useState(false);
+    const [isUploadingPostImage, setIsUploadingPostImage] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const postFileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchData = async () => {
+    const getMediaType = (file: File) => {
+      if (file.type.startsWith('video/')) return 'video';
+      return 'image';
+    };
+
+    const fetchData = async () => {
     try {
       setLoading(true);
       const { data: { user: authUser } } = await supabase.auth.getUser();
@@ -154,6 +160,7 @@ export default function SocialPage() {
 
       try {
         setIsUploadingPostImage(true);
+        const mediaType = getMediaType(file);
         const fileExt = file.name.split('.').pop();
         const fileName = `${user.id}/${Math.random()}.${fileExt}`;
         const filePath = `posts/${fileName}`;
@@ -169,10 +176,11 @@ export default function SocialPage() {
           .getPublicUrl(filePath);
 
         setNewPostImage(publicUrl);
-        toast.success("Aura image ready!");
+        setNewPostMediaType(mediaType);
+        toast.success(`Aura ${mediaType} ready!`);
       } catch (error: any) {
         console.error("Post image upload error:", error);
-        toast.error("Failed to upload image");
+        toast.error("Failed to upload file");
       } finally {
         setIsUploadingPostImage(false);
       }
@@ -192,6 +200,7 @@ export default function SocialPage() {
             user_id: user.id,
             content: newPostContent,
             image_url: newPostImage || null,
+            media_type: newPostMediaType,
           })
           .select(`
             *,
@@ -212,6 +221,7 @@ export default function SocialPage() {
         setPosts([data, ...posts]);
         setNewPostContent("");
         setNewPostImage("");
+        setNewPostMediaType("image");
         setIsCreatingPost(false);
         toast.success("Your aura has been shared!");
       } catch (error: any) {
@@ -228,6 +238,7 @@ export default function SocialPage() {
 
     try {
       setIsUploadingStory(true);
+      const mediaType = getMediaType(file);
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${Math.random()}.${fileExt}`;
       const filePath = `stories/${fileName}`;
@@ -247,6 +258,7 @@ export default function SocialPage() {
         .insert({
           user_id: user.id,
           image_url: publicUrl,
+          media_type: mediaType,
           expires_at: addDays(new Date(), 1).toISOString()
         });
 
@@ -297,7 +309,7 @@ export default function SocialPage() {
           <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
             <input 
               type="file" 
-              accept="image/*" 
+              accept="image/*,video/*" 
               className="hidden" 
               ref={fileInputRef}
               onChange={handleStoryUpload}
@@ -392,27 +404,40 @@ export default function SocialPage() {
                   className="min-h-[120px] bg-secondary/20 border-none rounded-2xl p-6 text-lg font-medium italic placeholder:text-muted-foreground/40 focus-visible:ring-primary/20"
                 />
                 
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden" 
-                  ref={postFileInputRef}
-                  onChange={handlePostImageUpload}
-                />
+                  <input 
+                    type="file" 
+                    accept="image/*,video/*" 
+                    className="hidden" 
+                    ref={postFileInputRef}
+                    onChange={handlePostImageUpload}
+                  />
 
-                {newPostImage ? (
-                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-border">
-                    <img src={newPostImage} className="w-full h-full object-cover" alt="Post preview" />
-                    <Button 
-                      variant="destructive" 
-                      size="icon" 
-                      className="absolute top-2 right-2 rounded-full h-8 w-8"
-                      onClick={() => setNewPostImage("")}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ) : (
+                  {newPostImage ? (
+                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-border bg-black">
+                      {newPostMediaType === 'video' ? (
+                        <video 
+                          src={newPostImage} 
+                          className="w-full h-full object-cover" 
+                          autoPlay 
+                          muted 
+                          loop 
+                        />
+                      ) : (
+                        <img src={newPostImage} className="w-full h-full object-cover" alt="Post preview" />
+                      )}
+                      <Button 
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-2 right-2 rounded-full h-8 w-8"
+                        onClick={() => {
+                          setNewPostImage("");
+                          setNewPostMediaType("image");
+                        }}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
                   <Button 
                     variant="outline" 
                     className="w-full h-32 rounded-2xl border-dashed border-2 bg-secondary/10 hover:bg-secondary/20 hover:border-primary/50 transition-all flex flex-col gap-2"
@@ -481,12 +506,23 @@ export default function SocialPage() {
                 
                 {post.image_url && (
                   <div className="px-4 pb-4">
-                    <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden relative shadow-inner">
-                      <img 
-                        src={post.image_url} 
-                        alt="Aura" 
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
+                    <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden relative shadow-inner bg-black">
+                      {post.media_type === 'video' ? (
+                        <video 
+                          src={post.image_url} 
+                          className="absolute inset-0 w-full h-full object-cover"
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                        />
+                      ) : (
+                        <img 
+                          src={post.image_url} 
+                          alt="Aura" 
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
                   </div>
@@ -621,12 +657,25 @@ export default function SocialPage() {
                     </motion.button>
                   </div>
 
-                  {/* Story Image */}
-                  <img 
-                    src={selectedStory.items[storyIndex].image_url} 
-                    className="w-full h-full object-cover"
-                    alt="Story"
-                  />
+                  {/* Story Media */}
+                  <div className="w-full h-full bg-black flex items-center justify-center">
+                    {selectedStory.items[storyIndex].media_type === 'video' ? (
+                      <video 
+                        src={selectedStory.items[storyIndex].image_url} 
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        playsInline
+                        onEnded={nextStory}
+                      />
+                    ) : (
+                      <img 
+                        src={selectedStory.items[storyIndex].image_url} 
+                        className="w-full h-full object-cover"
+                        alt="Story"
+                      />
+                    )}
+                  </div>
 
                   {/* Interaction Overlay */}
                   <div className="absolute bottom-12 left-8 right-8 z-20">
