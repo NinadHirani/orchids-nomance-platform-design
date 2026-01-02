@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [https://orchids-nomance-platform-desig-git-a99c5a-ninadhiranis-projects.vercel.app]([http://localhost:3000](https://orchids-nomance-platform-desig-git-a99c5a-ninadhiranis-projects.vercel.app)) with your browser to see the result.
+Open [orchids-nomance-platform-design-lpb.vercel.app](https://orchids-nomance-platform-desig-git-a99c5a-ninadhiranis-projects.vercel.app) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
